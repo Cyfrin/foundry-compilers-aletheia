@@ -1,0 +1,27 @@
+[[dependencies]]
+name = "@openzeppelin-contracts"
+version = "5.2.0"
+url = "https://soldeer-revisions.s3.amazonaws.com/@openzeppelin-contracts/5_2_0_11-01-2025_09:30:20_contracts.zip"
+checksum = "6dbd0440446b2ed16ca25e9f1af08fc0c5c1e73e71fee86ae8a00daa774e3817"
+integrity = "4cb7f3777f67fdf4b7d0e2f94d2f93f198b2e5dce718b7062ac7c2c83e1183bd"
+
+[[dependencies]]
+name = "@prb-math"
+version = "4.1.0"
+url = "https://soldeer-revisions.s3.amazonaws.com/@prb-math/4_1_0_22-10-2024_05:57:38_math.zip"
+checksum = "66acf2a42311309c06ed71a8674d9c7feeecfcd5a9c15d76006c083cfce7e938"
+integrity = "03266dc49f8be85438f5f7ce654ac700346862e5f927d17038481cf526ff4d62"
+
+[[dependencies]]
+name = "@uniswap-v2-core"
+version = "1.0.1"
+url = "https://soldeer-revisions.s3.amazonaws.com/@uniswap-v2-core/1_0_1_22-01-2024_13:18:30_v2-core.zip"
+checksum = "efebb89237048771c19f52d3ce87ec4d0c591279bf1977c49f9e70e5fff530f0"
+integrity = "fda4e18a2a0c21eeddd8b6af36439f394e4ff74eb75705409a87b8952c9e2972"
+
+[[dependencies]]
+name = "@uniswap-v2-periphery"
+version = "1.1.0-beta.0"
+url = "https://soldeer-revisions.s3.amazonaws.com/@uniswap-v2-periphery/1_1_0-beta_0_22-01-2024_13:18:39_v2-periphery.zip"
+checksum = "3bdc6134f1a89bc72052acde4882eb165e27f220982f53b399d7a1121bf2ab06"
+integrity = "9257846e3b8e190d352f55e7d3f81ba271c9fc651ad61f045f46b49ea651f191"
