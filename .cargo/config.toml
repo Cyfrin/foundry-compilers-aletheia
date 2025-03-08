@@ -1,5 +1,13 @@
 [alias]
 e = "run --example"
 
-[source."git+https://github.com/foundry-rs/foundry"]
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source."git+https://github.com/foundry-rs/foundry?branch=master"]
+git = "https://github.com/foundry-rs/foundry"
+branch = "master"
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
 directory = "foundry-rs-config"

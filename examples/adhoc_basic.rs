@@ -1,3 +1,5 @@
+use foundry_compilers_aletheia::get_config;
+
 fn main() {
-    println!("single file");
+    get_config();
 }
