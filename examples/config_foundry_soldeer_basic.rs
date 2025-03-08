@@ -17,4 +17,6 @@ fn main() {
     println!("{:#?}", raw_config.solc_settings());
     println!("{:#?}", raw_config.libraries_with_remappings());
     println!("{:#?}", raw_config.ephemeral_project().unwrap());
+    println!("{:#?}", raw_config.soldeer);
+    println!("{:#?}", raw_config.dependencies);
 }
