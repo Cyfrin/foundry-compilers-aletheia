@@ -110,3 +110,23 @@ mod foundry_soldeer_dep {
         assert!(raw_config.dependencies.is_some()); // Reads from foundry.toml
     }
 }
+
+mod foundry_soldeer_dep_noremap {
+
+    use pretty_assertions::assert_eq;
+    use std::{ffi::OsStr, path::Path};
+
+    use super::*;
+
+    const ROOT: &'static str = "test-configs/foundry-soldeer-dep-noremap";
+
+    #[test]
+    fn loads_config_currently() {
+        assert!(Path::new(ROOT).exists());
+        let raw_config = Config::load_with_root(ROOT).unwrap(); /*.sanitized()*/
+        assert_eq!(raw_config.src.as_os_str(), OsStr::new("src"));
+        assert_eq!(raw_config.remappings.len(), 6);
+        assert!(raw_config.soldeer.is_some()); // Explicitly ask soldeer not to manage remapings
+        assert!(raw_config.dependencies.is_some()); // Reads from foundry.toml
+    }
+}
