@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 foundry-compilers = "0.13.3"
+foundry-rs-config = { git = "https://github.com/foundry-rs/foundry", branch = "master", package = "foundry-config" }
