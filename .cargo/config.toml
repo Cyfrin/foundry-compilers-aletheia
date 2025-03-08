@@ -1,2 +1,5 @@
 [alias]
 e = "run --example"
+
+[source."git+https://github.com/foundry-rs/foundry"]
+directory = "foundry-rs-config"
