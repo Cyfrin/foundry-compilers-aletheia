@@ -4,11 +4,13 @@ version = "0.0.1"
 edition = "2024"
 
 [dependencies]
-foundry-compilers = "0.13.3"
+semver = "1.0.26"
 
 ## Vendored dependencies - See .cargo/config.toml for source substitution
 # Mar 8, 2025: https://github.com/foundry-rs/foundry?branch=master#74b8a802
 foundry-rs-config = { git = "https://github.com/foundry-rs/foundry", branch = "master", package = "foundry-config" }
+
+foundry-compilers = "0.13.3"
 
 [dev-dependencies]
 pretty_assertions = "1.4.1"

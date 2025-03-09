@@ -1137,6 +1137,7 @@ dependencies = [
  "foundry-compilers",
  "foundry-config",
  "pretty_assertions",
+ "semver 1.0.26",
 ]
 
 [[package]]

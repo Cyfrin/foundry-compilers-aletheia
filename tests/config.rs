@@ -3,7 +3,12 @@ use pretty_assertions::assert_eq;
 use std::{ffi::OsStr, path::Path};
 
 mod common {
-    use foundry_compilers::{Graph, ProjectBuilder, resolver::parse::SolData, solc::SolcCompiler};
+    use foundry_compilers::{
+        Graph, ProjectBuilder,
+        resolver::parse::SolData,
+        solc::{Solc, SolcCompiler},
+    };
+    use semver::Version;
 
     use super::*;
 
@@ -26,6 +31,12 @@ mod common {
         .unwrap();
 
         assert!(graph.into_sources_by_version(&p).is_ok());
+    }
+
+    #[test]
+    fn solc_can_be_installed() {
+        let solc = Solc::find_or_install(&Version::new(0, 8, 28)).unwrap();
+        assert!(solc.solc.exists());
     }
 
     // NOTE:
