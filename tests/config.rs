@@ -11,7 +11,7 @@ mod common {
     };
     use semver::Version;
 
-    use super::*;
+    use super::{assert_eq, *};
 
     pub fn get_raw_config(root: &str) -> Config {
         assert!(Path::new(root).exists());
@@ -52,6 +52,14 @@ mod common {
             SolcInput::new(SolcLanguage::Solidity, project_paths.read_sources().unwrap(), settings);
         let stdin_json = serde_json::to_string(&solc_input).unwrap();
         assert!(!stdin_json.is_empty());
+    }
+
+    #[test]
+    fn can_handle_symlinks() {
+        const ROOT: &'static str = "test-configs/foundry-symlink";
+        let raw_config = common::get_raw_config(ROOT).sanitized();
+        let project_paths = raw_config.project_paths::<SolcLanguage>();
+        assert_eq!(project_paths.read_sources().unwrap().len(), 2);
     }
 
     // NOTE:
