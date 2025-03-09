@@ -1,3 +1,4 @@
+use foundry_compilers::solc::SolcCompiler;
 use foundry_rs_config::Config;
 use pretty_assertions::assert_eq;
 use std::{ffi::OsStr, path::Path};
@@ -96,6 +97,13 @@ mod foundry_basic {
     fn can_be_grouped() {
         common::can_be_grouped(ROOT);
     }
+
+    #[test]
+    fn identified_version_correctly() {
+        let raw_config = common::get_raw_config(ROOT);
+        let compiler = raw_config.solc_compiler().unwrap();
+        assert!(matches!(compiler, SolcCompiler::AutoDetect));
+    }
 }
 
 mod foundry_soldeer_basic {
@@ -118,6 +126,13 @@ mod foundry_soldeer_basic {
     #[test]
     fn can_be_grouped() {
         common::can_be_grouped(ROOT);
+    }
+
+    #[test]
+    fn identified_version_correctly() {
+        let raw_config = common::get_raw_config(ROOT);
+        let compiler = raw_config.solc_compiler().unwrap();
+        assert!(matches!(compiler, SolcCompiler::AutoDetect));
     }
 }
 
@@ -143,6 +158,13 @@ mod soldeer_basic {
     fn can_be_grouped() {
         common::can_be_grouped(ROOT);
     }
+
+    #[test]
+    fn identified_version_correctly() {
+        let raw_config = common::get_raw_config(ROOT);
+        let compiler = raw_config.solc_compiler().unwrap();
+        assert!(matches!(compiler, SolcCompiler::AutoDetect));
+    }
 }
 
 mod foundry_soldeer_dep {
@@ -166,9 +188,17 @@ mod foundry_soldeer_dep {
     fn can_be_grouped() {
         common::can_be_grouped(ROOT);
     }
+
+    #[test]
+    fn identified_version_correctly() {
+        let raw_config = common::get_raw_config(ROOT);
+        let compiler = raw_config.solc_compiler().unwrap();
+        assert!(matches!(compiler, SolcCompiler::AutoDetect));
+    }
 }
 
 mod foundry_soldeer_dep_noremap {
+
     use super::{assert_eq, *};
 
     const ROOT: &'static str = "test-configs/foundry-soldeer-dep-noremap";
@@ -188,6 +218,13 @@ mod foundry_soldeer_dep_noremap {
     #[test]
     fn can_be_grouped() {
         common::can_be_grouped(ROOT);
+    }
+
+    #[test]
+    fn identified_version_correctly() {
+        let raw_config = common::get_raw_config(ROOT);
+        let compiler = raw_config.solc_compiler().unwrap();
+        assert!(matches!(compiler, SolcCompiler::AutoDetect));
     }
 }
 
@@ -215,6 +252,60 @@ mod hardhat_basic {
     fn identifies_source_correctly() {
         let raw_config = common::get_raw_config(ROOT);
         assert_eq!(raw_config.src.as_os_str(), OsStr::new("contracts"));
+    }
+
+    #[test]
+    fn can_be_grouped() {
+        common::can_be_grouped(ROOT);
+    }
+
+    #[test]
+    fn identified_version_correctly() {
+        let raw_config = common::get_raw_config(ROOT);
+        let compiler = raw_config.solc_compiler().unwrap();
+        assert!(matches!(compiler, SolcCompiler::AutoDetect));
+    }
+}
+
+#[allow(unused_imports)]
+mod foundry_fix_version {
+
+    use foundry_compilers::{
+        Graph, Project, ProjectBuilder, ProjectCompileOutput,
+        project::{self, ProjectCompiler},
+        resolver::parse::SolData,
+        solc::{Solc, SolcCompiler, SolcLanguage},
+    };
+    use semver::Version;
+
+    use super::{assert_eq, *};
+
+    const ROOT: &'static str = "test-configs/foundry-fix-version";
+
+    #[test]
+    fn identifies_remappings_correctly() {
+        let raw_config = common::get_raw_config(ROOT);
+        assert_eq!(raw_config.remappings.len(), 1);
+    }
+
+    #[test]
+    fn identifies_source_correctly() {
+        let raw_config = common::get_raw_config(ROOT);
+        assert_eq!(raw_config.src.as_os_str(), OsStr::new("src"));
+    }
+
+    #[test]
+    fn identified_version_correctly() {
+        let raw_config = common::get_raw_config(ROOT);
+        let compiler = raw_config.solc_compiler().unwrap();
+        match compiler {
+            SolcCompiler::AutoDetect => panic!("explcit version did not override auto detect solc"),
+            SolcCompiler::Specific(solc) => {
+                assert_eq!(solc.version.major, 0);
+                assert_eq!(solc.version.minor, 8);
+                assert_eq!(solc.version.patch, 15);
+            }
+        }
     }
 
     #[test]
