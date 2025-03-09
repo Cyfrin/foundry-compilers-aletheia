@@ -36,6 +36,8 @@ mod common {
 
     #[test]
     fn solc_can_be_installed() {
+        // Make sure to check [`Solc::releases`] to see what's available first.
+        // If that is not done, it will install but erorr out. (As it may be Pre-relase)
         let solc = Solc::find_or_install(&Version::new(0, 8, 28)).unwrap();
         assert!(solc.solc.exists());
     }
