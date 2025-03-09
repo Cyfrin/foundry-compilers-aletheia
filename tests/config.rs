@@ -46,6 +46,7 @@ mod common {
         let raw_config = common::get_raw_config(ROOT).sanitized();
         let project_paths = raw_config.project_paths::<SolcLanguage>();
 
+        // TODO: set remapppings in settings
         let settings = Settings::new(OutputSelection::ast_output_selection());
         let solc_input =
             SolcInput::new(SolcLanguage::Solidity, project_paths.read_sources().unwrap(), settings);
