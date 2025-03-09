@@ -4,14 +4,11 @@ version = "0.0.1"
 edition = "2024"
 
 [dependencies]
+foundry-compilers = "0.13.3"
 
 ## Vendored dependencies - See .cargo/config.toml for source substitution
-
 # Mar 8, 2025: https://github.com/foundry-rs/foundry?branch=master#74b8a802
 foundry-rs-config = { git = "https://github.com/foundry-rs/foundry", branch = "master", package = "foundry-config" }
-
-# Mar 8, 2025: Linked to vendored directory, v0.13.3
-foundry-compilers = { path = "foundry-rs-config/foundry-compilers" }
 
 [dev-dependencies]
 pretty_assertions = "1.4.1"

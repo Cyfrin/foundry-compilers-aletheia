@@ -1089,41 +1089,13 @@ dependencies = [
  "alloy-chains",
  "alloy-json-abi",
  "alloy-primitives",
- "foundry-compilers 0.13.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "foundry-compilers",
  "reqwest",
  "semver 1.0.26",
  "serde",
  "serde_json",
  "thiserror 1.0.69",
  "tracing",
-]
-
-[[package]]
-name = "foundry-compilers"
-version = "0.13.3"
-dependencies = [
- "alloy-json-abi",
- "alloy-primitives",
- "auto_impl",
- "derive_more 1.0.0",
- "dirs 6.0.0",
- "dyn-clone",
- "foundry-compilers-artifacts",
- "foundry-compilers-core",
- "home",
- "itertools 0.14.0",
- "md-5",
- "path-slash",
- "rayon",
- "semver 1.0.26",
- "serde",
- "serde_json",
- "solar-parse",
- "svm-rs",
- "thiserror 2.0.12",
- "tracing",
- "winnow",
- "yansi",
 ]
 
 [[package]]
@@ -1162,7 +1134,7 @@ dependencies = [
 name = "foundry-compilers-aletheia"
 version = "0.0.1"
 dependencies = [
- "foundry-compilers 0.13.3",
+ "foundry-compilers",
  "foundry-config",
  "pretty_assertions",
 ]
@@ -1247,7 +1219,7 @@ dependencies = [
  "eyre",
  "figment",
  "foundry-block-explorers",
- "foundry-compilers 0.13.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "foundry-compilers",
  "glob",
  "globset",
  "itertools 0.14.0",
