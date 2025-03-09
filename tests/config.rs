@@ -5,8 +5,9 @@ use std::{ffi::OsStr, path::Path};
 mod common {
     use foundry_compilers::{
         Graph, ProjectBuilder,
+        artifacts::{Settings, SolcInput, output_selection::OutputSelection},
         resolver::parse::SolData,
-        solc::{Solc, SolcCompiler},
+        solc::{Solc, SolcCompiler, SolcLanguage},
     };
     use semver::Version;
 
@@ -37,6 +38,19 @@ mod common {
     fn solc_can_be_installed() {
         let solc = Solc::find_or_install(&Version::new(0, 8, 28)).unwrap();
         assert!(solc.solc.exists());
+    }
+
+    #[test]
+    fn can_create_stdin_json() {
+        const ROOT: &'static str = "test-configs/foundry-basic";
+        let raw_config = common::get_raw_config(ROOT).sanitized();
+        let project_paths = raw_config.project_paths::<SolcLanguage>();
+
+        let settings = Settings::new(OutputSelection::ast_output_selection());
+        let solc_input =
+            SolcInput::new(SolcLanguage::Solidity, project_paths.read_sources().unwrap(), settings);
+        let stdin_json = serde_json::to_string(&solc_input).unwrap();
+        assert!(!stdin_json.is_empty());
     }
 
     // NOTE:

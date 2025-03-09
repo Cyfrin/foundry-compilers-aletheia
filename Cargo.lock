@@ -1138,6 +1138,7 @@ dependencies = [
  "foundry-config",
  "pretty_assertions",
  "semver 1.0.26",
+ "serde_json",
 ]
 
 [[package]]

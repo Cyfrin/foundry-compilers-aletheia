@@ -1,0 +1,24 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "/Users/tilakmadichetti/Documents/OpenSource/foundry-compilers-aletheia/test-configs/foundry-basic/src/Counter.sol": {
+      "content": "// SPDX-License-Identifier: UNLICENSED\npragma solidity ^0.8.13;\n\ncontract Counter {\n    uint256 public number;\n\n    function setNumber(uint256 newNumber) public {\n        number = newNumber;\n    }\n\n    function increment() public {\n        number++;\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "": [
+          "ast"
+        ],
+        "*": []
+      }
+    },
+    "evmVersion": "cancun",
+    "libraries": {}
+  }
+}
