@@ -9,6 +9,12 @@ mod common {
         assert!(Path::new(root).exists());
         Config::load_with_root(root).unwrap() /*.sanitized()*/
     }
+
+    // NOTE:
+    // * [`Config::project_paths::<Solc>()`] has a bug which is that the `sources` field
+    // on [`ProjectPaths`] although correctly identified in `Config`, get canonicalized
+    // incorrectly when the value is `src`. Otherwise, canonicalization won't happen (as desired)
+    // Above observation has been made on non-sanitized config
 }
 
 /// Module created with plain `forge init` and nothing more .
@@ -99,7 +105,7 @@ mod foundry_soldeer_dep_noremap {
     #[test]
     fn identifies_source_correctly() {
         let raw_config = common::get_raw_config(ROOT);
-        assert_eq!(raw_config.src.as_os_str(), OsStr::new("src"));
+        assert_eq!(raw_config.src.as_os_str(), OsStr::new("sources"));
     }
 }
 
