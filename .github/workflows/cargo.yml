@@ -61,7 +61,7 @@ jobs:
 
       - name: Install JS Dependencies
         run: |
-          cd tests-config/hardhat-basic
+          cd tests-configs/hardhat-basic
           pnpm install
           cd ../../
 
