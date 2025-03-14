@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use foundry_rs_config::Config;
 
-const ROOT: &'static str = "test-configs/soldeer-basic";
+const ROOT: &str = "test-configs/soldeer-basic";
 
 fn main() {
     let mut p = PathBuf::from(env!("CARGO_MANIFEST_DIR"));

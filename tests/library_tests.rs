@@ -41,11 +41,13 @@ mod common {
         // If that is not done, it will install but erorr out. (As it may be Pre-relase)
         let solc = Solc::find_or_install(&Version::new(0, 8, 28)).unwrap();
         assert!(solc.solc.exists());
+        let solc = Solc::find_or_install(&Version::new(0, 8, 29)).unwrap();
+        assert!(solc.solc.exists());
     }
 
     #[test]
     fn can_create_stdin_json() {
-        const ROOT: &'static str = "test-configs/foundry-basic";
+        const ROOT: &str = "test-configs/foundry-basic";
         let raw_config = common::get_raw_config(ROOT).sanitized();
         let project_paths = raw_config.project_paths::<SolcLanguage>();
 
@@ -59,7 +61,7 @@ mod common {
 
     #[test]
     fn can_handle_symlinks() {
-        const ROOT: &'static str = "test-configs/foundry-symlink";
+        const ROOT: &str = "test-configs/foundry-symlink";
         let raw_config = common::get_raw_config(ROOT).sanitized();
         let project_paths = raw_config.project_paths::<SolcLanguage>();
         assert_eq!(project_paths.read_sources().unwrap().len(), 2);
@@ -79,7 +81,7 @@ mod common {
 mod foundry_basic {
     use super::{assert_eq, *};
 
-    const ROOT: &'static str = "test-configs/foundry-basic";
+    const ROOT: &str = "test-configs/foundry-basic";
 
     #[test]
     fn identifies_remappings_correctly() {
@@ -109,7 +111,7 @@ mod foundry_basic {
 mod foundry_soldeer_basic {
     use super::{assert_eq, *};
 
-    const ROOT: &'static str = "test-configs/foundry-soldeer-basic";
+    const ROOT: &str = "test-configs/foundry-soldeer-basic";
 
     #[test]
     fn identifies_remappings_correctly() {
@@ -139,7 +141,7 @@ mod foundry_soldeer_basic {
 mod soldeer_basic {
     use super::{assert_eq, *};
 
-    const ROOT: &'static str = "test-configs/soldeer-basic";
+    const ROOT: &str = "test-configs/soldeer-basic";
 
     #[test]
     fn identifies_remappings_correctly() {
@@ -170,7 +172,7 @@ mod soldeer_basic {
 mod foundry_soldeer_dep {
     use super::{assert_eq, *};
 
-    const ROOT: &'static str = "test-configs/foundry-soldeer-dep";
+    const ROOT: &str = "test-configs/foundry-soldeer-dep";
 
     #[test]
     fn identifies_remappings_correctly() {
@@ -201,7 +203,7 @@ mod foundry_soldeer_dep_noremap {
 
     use super::{assert_eq, *};
 
-    const ROOT: &'static str = "test-configs/foundry-soldeer-dep-noremap";
+    const ROOT: &str = "test-configs/foundry-soldeer-dep-noremap";
 
     #[test]
     fn identifies_remappings_correctly() {
@@ -240,7 +242,7 @@ mod hardhat_basic {
 
     use super::{assert_eq, *};
 
-    const ROOT: &'static str = "test-configs/hardhat-basic";
+    const ROOT: &str = "test-configs/hardhat-basic";
 
     #[test]
     fn identifies_remappings_correctly() {
@@ -280,7 +282,7 @@ mod foundry_fix_version {
 
     use super::{assert_eq, *};
 
-    const ROOT: &'static str = "test-configs/foundry-fix-version";
+    const ROOT: &str = "test-configs/foundry-fix-version";
 
     #[test]
     fn identifies_remappings_correctly() {
