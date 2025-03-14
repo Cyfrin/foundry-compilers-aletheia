@@ -23,8 +23,10 @@ mod common {
         let raw_config = common::get_raw_config(root).sanitized();
         let project_paths = raw_config.project_paths();
 
-        let builder = ProjectBuilder::<SolcCompiler>::default();
-        let p = builder.paths(project_paths.clone()).build(Default::default()).unwrap();
+        let p = ProjectBuilder::<SolcCompiler>::default()
+            .paths(project_paths.clone())
+            .build(Default::default())
+            .unwrap();
 
         let graph = Graph::<SolData>::resolve_sources(
             &project_paths,
