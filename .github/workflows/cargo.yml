@@ -61,6 +61,7 @@ jobs:
 
       - name: Install JS Dependencies
         run: |
+          pnpm install -g hardhat
           pnpm install --prefix test-configs/hardhat-basic
 
       - name: Checkout Sources
