@@ -35,9 +35,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Install Foundry Toolchain
-        uses: foundry-rs/foundry-toolchain@v1.2.0
-
       - name: Checkout Sources
         uses: actions/checkout@v4
 
@@ -64,7 +61,7 @@ jobs:
 
       - name: Install JS Dependencies
         run: |
-          pnpm install --prefix test-config/hardhat-basic
+          pnpm install --prefix test-configs/hardhat-basic
 
       - name: Checkout Sources
         uses: actions/checkout@v4
