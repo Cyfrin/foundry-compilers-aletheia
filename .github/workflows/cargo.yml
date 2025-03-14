@@ -54,15 +54,11 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - name: Install JS Dependencies
         run: |
           cd test-configs/hardhat-basic
-          pnpm install
+          npm install
+          npm install --save-dev
           cd ../../
 
       - name: Checkout Sources
