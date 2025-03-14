@@ -35,18 +35,12 @@ jobs:
         run: |
           cd test-configs/hardhat-basic
           npm install
-          npm install --save-dev
           cd ../../
-
-      - name: Checkout Sources
-        uses: actions/checkout@v4
 
       - name: Restore Rust Cache
         uses: Swatinem/rust-cache@v2
 
       - name: Run tests
         run: |
-          ls test-configs/hardhat-basic
-          pwd
           cargo build
           cargo test -- --nocapture
