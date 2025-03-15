@@ -28,6 +28,7 @@ pub struct VersionedAstOutputs {
 /// Output type `solc` produces
 #[derive(Clone, Debug, Default, PartialEq, Eq, Deserialize)]
 pub struct SolcCompilerOutput {
+    #[serde(default)]
     pub errors: Vec<foundry_compilers::artifacts::Error>,
     #[serde(default)]
     pub sources: BTreeMap<PathBuf, AstSourceFile>,
