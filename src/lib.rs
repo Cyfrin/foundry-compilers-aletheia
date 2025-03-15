@@ -1,4 +1,24 @@
-//! Easily generate ASTs for Solidity Projects
+//! # Easily generate ASTs for Solidity Projects
+//!
+//! Derive ASTs and other Evm Info with builder API that allows passing information in increments.
+//!
+//! ## Goal
+//!
+//! Fastest way to generate ASTs from the `solc` compiler
+//!
+//! ## Example
+//!
+//!```no_run
+//! use foundry_compilers_aletheia::{
+//!     DerivedAstEvmInfo, ProjectConfigInputBuilder, Result, derive_ast_and_evm_info,
+//! };
+//! use std::path::Path;
+//!
+//! pub fn ast_info(root: &str) -> Result<DerivedAstEvmInfo> {
+//!     let config = ProjectConfigInputBuilder::new(Path::new(root)).build()?;
+//!     derive_ast_and_evm_info(&config)
+//! }
+//! ```
 
 mod error;
 mod project_config;
