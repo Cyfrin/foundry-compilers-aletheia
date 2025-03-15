@@ -7,14 +7,14 @@ use std::{
 use foundry_compilers::{
     Graph, ProjectBuilder, ProjectPathsConfig,
     artifacts::{
-        Ast, Settings, SolcInput, SourceFile, Sources, StandardJsonCompilerInput,
+        Ast, Settings, SolcInput, Sources, StandardJsonCompilerInput,
         output_selection::OutputSelection,
     },
     resolver::parse::SolData,
     solc::{Solc, SolcCompiler, SolcLanguage},
 };
 use foundry_rs_config::filter::GlobMatcher;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 pub struct ProjectConfigInput {
     /// Root directory must contain hardhat.config.ts/.js or foundry.toml or (it's FOUNDRY_
@@ -89,7 +89,7 @@ impl ProjectConfigInput {
 
                 // ensure all required solc versions are nstalled
                 for (v, _, _) in &versioned_sources {
-                    Solc::find_or_install(&v)?;
+                    Solc::find_or_install(v)?;
                 }
 
                 Ok(HashMap::from_iter(
