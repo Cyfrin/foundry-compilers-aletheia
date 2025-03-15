@@ -7,7 +7,7 @@ use std::{
 use foundry_compilers::{
     Graph, ProjectBuilder, ProjectPathsConfig,
     artifacts::{
-        EvmVersion, Settings, SolcInput, Sources, StandardJsonCompilerInput,
+        EvmVersion, Settings, SolcInput, Source, Sources, StandardJsonCompilerInput,
         output_selection::OutputSelection,
     },
     resolver::parse::SolData,
@@ -17,7 +17,7 @@ use foundry_rs_config::filter::GlobMatcher;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use semver::Version;
 
-use super::VersionedAstOutputs;
+use super::{VersionedAstOutputs, utils::source_files_iter};
 
 #[derive(Debug)]
 pub struct ProjectConfigInput {
@@ -66,8 +66,9 @@ impl ProjectConfigInput {
             SolcInput::new(SolcLanguage::Solidity, sources, settings)
         };
 
-        // NOTE: Takes too much time in case of soldeer_basic as it goes through dependencies
-        let sources = self.project_paths.read_sources()?;
+        let sources = Source::read_all_files(
+            source_files_iter(&self.project_paths.sources, &self).collect(),
+        )?;
 
         match &self.solc_compiler {
             SolcCompilerConfigInput::AutoDetect => {
@@ -145,7 +146,7 @@ impl ProjectConfigInput {
     }
 
     /// Returns if a file should be included
-    fn is_included(&self, path: &Path) -> bool {
+    pub(crate) fn is_included(&self, path: &Path) -> bool {
         // Auto exclude
         for x in &self.exclude_starting {
             if path.starts_with(x) {
