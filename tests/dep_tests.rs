@@ -33,16 +33,16 @@ mod common {
         let raw_config = common::get_raw_config(root).sanitized();
         let project_paths = raw_config.project_paths();
 
-        let p = ProjectBuilder::<SolcCompiler>::default()
-            .paths(project_paths.clone())
-            .build(Default::default())
-            .unwrap();
-
         let graph = Graph::<SolData>::resolve_sources(
             &project_paths,
             project_paths.read_sources().unwrap(),
         )
         .unwrap();
+
+        let p = ProjectBuilder::<SolcCompiler>::default()
+            .paths(project_paths.clone())
+            .build(Default::default())
+            .unwrap();
 
         let resolved = graph.into_sources_by_version(&p).unwrap();
         let versioned_sources = resolved.sources.get(&SolcLanguage::Solidity).unwrap().clone();
