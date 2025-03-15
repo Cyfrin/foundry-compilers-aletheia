@@ -125,15 +125,12 @@ impl ProjectConfigInput {
             let compiler_output: SolcCompilerOutput = serde_json::from_str(str_output)?;
 
             // Tag is_included
-            let is_included = compiler_output
-                .sources
-                .keys()
-                .map(|k| (k.to_owned(), self.is_included(k)))
-                .collect();
+            let included_files =
+                compiler_output.sources.keys().filter(|k| self.is_included(k)).cloned().collect();
 
             // Versioned Ast
             let outputs =
-                VersionedAstOutputs { version: version.clone(), compiler_output, is_included };
+                VersionedAstOutputs { version: version.clone(), compiler_output, included_files };
 
             // Store the ASTs
             asts.push(outputs);

@@ -2,7 +2,7 @@ use foundry_compilers::artifacts::EvmVersion;
 use semver::Version;
 use serde::Deserialize;
 use std::{
-    collections::{BTreeMap, HashMap},
+    collections::{BTreeMap, HashSet},
     path::PathBuf,
 };
 
@@ -20,9 +20,9 @@ pub struct VersionedAstOutputs {
     pub version: Version,
     /// Deserialized output of running `solc` command
     pub compiler_output: SolcCompilerOutput,
-    /// Boolean that is `true` for files that pass the include and exclude tests/arguments
+    /// Set of files that pass the include and exclude tests/arguments
     /// supplied when creating [`super::ProjectConfigInput`]
-    pub is_included: HashMap<PathBuf, bool>,
+    pub included_files: HashSet<PathBuf>,
 }
 
 /// Output type `solc` produces
