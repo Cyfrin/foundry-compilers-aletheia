@@ -40,8 +40,7 @@ pub enum SolcCompilerInput {
 
 impl ProjectConfigInput {
     pub fn make_asts(&self) -> Result<()> {
-        let compiler_input = self.solc_input_for_ast_generation()?;
-
+        let _compiler_input = self.solc_input_for_ast_generation()?;
         Ok(())
     }
 }
