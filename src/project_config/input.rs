@@ -39,15 +39,7 @@ pub enum SolcCompilerInput {
 }
 
 impl ProjectConfigInput {
-    pub fn print_standard_json_solc_input(&self) -> Result<()> {
-        let compiler_input = self.solc_input_for_ast_generation()?;
-        println!("{:#?}", compiler_input);
-        Ok(())
-    }
-}
-
-impl ProjectConfigInput {
-    fn solc_input_for_ast_generation(&self) -> Result<HashMap<semver::Version, SolcInput>> {
+    pub fn solc_input_for_ast_generation(&self) -> Result<HashMap<semver::Version, SolcInput>> {
         let create_standard_json_for_ast = |sources: Sources| -> SolcInput {
             SolcInput::new(
                 SolcLanguage::Solidity,
