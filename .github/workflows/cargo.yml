@@ -37,6 +37,6 @@ jobs:
 
       - name: Run tests
         run: |
-          ls test-configs/hardhat-basic/node_modules
+          ls -la test-configs/hardhat-basic/node_modules
           cargo build
           cargo test -- --nocapture
