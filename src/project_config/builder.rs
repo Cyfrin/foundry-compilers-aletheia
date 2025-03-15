@@ -62,6 +62,9 @@ pub enum IncludeConfig {
 pub(crate) const EMPTY_STRING: &str = "";
 
 impl ProjectConfigInputBuilder {
+    /// Creates a new instance of [`ProjectConfigInputBuilder`]
+    /// Root directory must contain hardhat.config.ts/.js or foundry.toml or (it's FOUNDRY_
+    /// equivalet name)
     pub fn new(root: &Path) -> ProjectConfigInputBuilder {
         ProjectConfigInputBuilder {
             root: root.to_owned(),
