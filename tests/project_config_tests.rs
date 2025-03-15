@@ -16,8 +16,6 @@ mod common {
         let ast_input = config_input.solc_input_for_ast_generation()?;
         Ok(ast_input)
     }
-
-    pub fn create_asts(root: &str) {}
 }
 
 #[allow(unused_imports)]
