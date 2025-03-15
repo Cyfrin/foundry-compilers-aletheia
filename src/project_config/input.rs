@@ -17,8 +17,7 @@ pub struct ProjectConfigInput {
     /// Paths (sources) containing these strings will be excluded
     pub exclude_containing: Vec<String>,
 
-    /// Paths (sources) starting with these will be excluded
-    /// These are absolute paths
+    /// List of Absolute Paths (nested in sources) that will be excluded
     pub exclude_starting: Vec<PathBuf>,
 
     /// Paths (sources) matching with these will be excluded
