@@ -1,8 +1,5 @@
-use crate::Result;
-use std::{
-    collections::{BTreeMap, HashMap},
-    path::PathBuf,
-};
+use crate::{Result, SolcCompilerOutput};
+use std::{collections::HashMap, path::PathBuf};
 
 use foundry_compilers::{
     Graph, ProjectBuilder, ProjectPathsConfig,
@@ -13,7 +10,6 @@ use foundry_compilers::{
     solc::{Solc, SolcCompiler, SolcLanguage},
 };
 use foundry_rs_config::filter::GlobMatcher;
-use serde::Deserialize;
 
 pub struct ProjectConfigInput {
     /// Root directory must contain hardhat.config.ts/.js or foundry.toml or (it's FOUNDRY_
@@ -36,41 +32,12 @@ pub struct ProjectConfigInput {
     pub skip: Vec<GlobMatcher>,
 
     /// Solc Version to use for compiling
-    pub solc_compiler: SolcCompilerInput,
+    pub solc_compiler: SolcCompilerConfigInput,
 }
 
-pub enum SolcCompilerInput {
+pub enum SolcCompilerConfigInput {
     AutoDetect,
     Specific(Solc),
-}
-
-///// Output type `solc` produces
-#[derive(Clone, Debug, Default, PartialEq, Eq, Deserialize)]
-pub struct SolcCompilerOutput {
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub errors: Vec<foundry_compilers::artifacts::Error>,
-    #[serde(default)]
-    pub sources: BTreeMap<PathBuf, AstContent>,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
-pub struct AstContent {
-    pub id: u32,
-    #[serde(deserialize_with = "raw_map_string::deserialize")]
-    pub ast: String,
-}
-
-mod raw_map_string {
-    use serde::{Deserialize, Deserializer};
-    use serde_json::{self, Value};
-
-    pub fn deserialize<'de, D>(deserializer: D) -> Result<String, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        let value: Value = Value::deserialize(deserializer)?;
-        serde_json::to_string(&value).map_err(serde::de::Error::custom)
-    }
 }
 
 impl ProjectConfigInput {
@@ -86,7 +53,7 @@ impl ProjectConfigInput {
         let sources = self.project_paths.read_sources()?;
 
         match &self.solc_compiler {
-            SolcCompilerInput::AutoDetect => {
+            SolcCompilerConfigInput::AutoDetect => {
                 let project = ProjectBuilder::<SolcCompiler>::default()
                     .paths(self.project_paths.clone()) // cheap enough to clone (doesn't contain content)
                     .build(Default::default())?;
@@ -112,7 +79,7 @@ impl ProjectConfigInput {
                 ))
             }
 
-            SolcCompilerInput::Specific(solc) => {
+            SolcCompilerConfigInput::Specific(solc) => {
                 let versioned_sources = HashMap::from_iter(vec![(
                     solc.version.clone(),
                     create_standard_json_for_ast(sources),

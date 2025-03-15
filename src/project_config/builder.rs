@@ -7,7 +7,7 @@ use foundry_rs_config::Config;
 use semver::Version;
 use std::path::{Path, PathBuf};
 
-use super::{ProjectConfigInput, SolcCompilerInput};
+use super::{ProjectConfigInput, SolcCompilerConfigInput};
 
 /// ## Builder for [`ProjectConfigInput`]
 ///
@@ -170,11 +170,11 @@ impl ProjectConfigInputBuilder {
         let solc_compiler = match &self.solc_version {
             SolcVersionConfig::Specific(solc_version) => {
                 let solc = Solc::find_or_install(solc_version)?;
-                SolcCompilerInput::Specific(solc)
+                SolcCompilerConfigInput::Specific(solc)
             }
             SolcVersionConfig::Auto => match config.solc_compiler()? {
-                SolcCompiler::AutoDetect => SolcCompilerInput::AutoDetect,
-                SolcCompiler::Specific(solc) => SolcCompilerInput::Specific(solc),
+                SolcCompiler::AutoDetect => SolcCompilerConfigInput::AutoDetect,
+                SolcCompiler::Specific(solc) => SolcCompilerConfigInput::Specific(solc),
             },
         };
 
