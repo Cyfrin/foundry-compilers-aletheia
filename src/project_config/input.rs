@@ -111,8 +111,7 @@ impl ProjectConfigInput {
     pub fn make_asts(&self) -> Result<HashMap<Version, Vec<VersionedAstOutputs>>> {
         let mut asts: HashMap<_, Vec<_>> = HashMap::new();
 
-        let versioned_solc_input = self.solc_input_for_ast_generation()?;
-        for (version, solc_input) in versioned_solc_input {
+        for (version, solc_input) in self.solc_input_for_ast_generation()? {
             // Grab the relevant solc compiler
             let solc = Solc::find_or_install(&version)?;
 
