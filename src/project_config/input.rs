@@ -16,7 +16,7 @@ use foundry_compilers::{
 use foundry_rs_config::filter::GlobMatcher;
 use semver::Version;
 
-use super::{DerivedAstEvmInfo, VersionedAstOutputs};
+use super::VersionedAstOutputs;
 
 #[derive(Debug)]
 pub struct ProjectConfigInput {
@@ -172,11 +172,4 @@ impl ProjectConfigInput {
         // Include containing
         self.include_containing.iter().any(|include_string| path_str.contains(include_string))
     }
-}
-
-pub fn derive_ast_and_evm_info(config: &ProjectConfigInput) -> Result<DerivedAstEvmInfo> {
-    let asts = config.make_asts()?;
-    let evm_version = config.evm_version;
-
-    Ok(DerivedAstEvmInfo { versioned_asts: asts, evm_version })
 }
