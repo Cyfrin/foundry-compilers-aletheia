@@ -23,6 +23,21 @@ pub fn get_compiler_input(root: &str) -> Result<HashMap<semver::Version, Standar
 }
 ```
 
+Expose ASTs
+
+```rust
+use std::path::Path;
+
+use foundry_compilers_aletheia::{
+    DerivedAstEvmInfo, ProjectConfigInputBuilder, Result, derive_ast_and_evm_info,
+};
+
+pub fn ast_info(root: &str) -> Result<DerivedAstEvmInfo> {
+    let config = ProjectConfigInputBuilder::new(Path::new(root)).build()?;
+    derive_ast_and_evm_info(&config)
+}
+```
+
 ## Attribution
 
 #### [`foundry-compilers`](https://github.com/foundry-rs/compilers) 
