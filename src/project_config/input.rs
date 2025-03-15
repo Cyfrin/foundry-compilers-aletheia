@@ -57,7 +57,21 @@ pub struct SolcCompilerOutput {
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 pub struct AstContent {
     pub id: u32,
-    pub ast: Option<Ast>,
+    #[serde(deserialize_with = "raw_map_string::deserialize")]
+    pub ast: String,
+}
+
+mod raw_map_string {
+    use serde::{Deserialize, Deserializer};
+    use serde_json::{self, Value};
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<String, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let value: Value = Value::deserialize(deserializer)?;
+        serde_json::to_string(&value).map_err(serde::de::Error::custom)
+    }
 }
 
 impl ProjectConfigInput {
