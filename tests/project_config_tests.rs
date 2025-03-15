@@ -70,6 +70,16 @@ mod foundry_soldeer_dep {
     use super::{assert_eq, *};
 
     const ROOT: &str = "test-configs/foundry-soldeer-dep";
+
+    use crate::common::get_compiler_input;
+
+    #[test]
+    fn compiler_input() {
+        let c = get_compiler_input(ROOT).unwrap();
+        assert_eq!(c.values().len(), 1); // 1 version group
+        let values = c.values().next().expect("No files found");
+        assert_eq!(values.sources.len(), 1);
+    }
 }
 
 #[allow(unused_imports)]
@@ -78,6 +88,15 @@ mod foundry_soldeer_dep_noremap {
     use super::{assert_eq, *};
 
     const ROOT: &str = "test-configs/foundry-soldeer-dep-noremap";
+    use crate::common::get_compiler_input;
+
+    #[test]
+    fn compiler_input() {
+        let c = get_compiler_input(ROOT).unwrap();
+        assert_eq!(c.values().len(), 1); // 1 version group
+        let values = c.values().next().expect("No files found");
+        assert_eq!(values.sources.len(), 1);
+    }
 }
 
 #[allow(unused_imports)]
