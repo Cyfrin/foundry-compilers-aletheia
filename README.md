@@ -10,7 +10,7 @@ foundry-compilers-aletheia = { git = "https://github.com/Cyfrin/foundry-compiler
 
 ```
 
-Extract ASTs and other Evm Info
+### Extract ASTs and other Evm Info
 
 ```rust
 use std::path::Path;
