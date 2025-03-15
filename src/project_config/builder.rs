@@ -1,4 +1,4 @@
-use crate::error::Result;
+use crate::Result;
 use foundry_compilers::{
     solc::{Solc, SolcCompiler},
     utils,
