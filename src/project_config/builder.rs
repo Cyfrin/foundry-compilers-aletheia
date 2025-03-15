@@ -5,7 +5,10 @@ use foundry_compilers::{
 };
 use foundry_rs_config::Config;
 use semver::Version;
-use std::path::{Path, PathBuf};
+use std::{
+    ffi::OsStr,
+    path::{Path, PathBuf},
+};
 
 use super::{ProjectConfigInput, SolcCompilerConfigInput};
 
@@ -202,12 +205,31 @@ fn load_baseline_config(root: PathBuf) -> Result<Config> {
     let hh_js = root.join("hardhat.config.js");
     let hh_ts = root.join("hardhat.config.ts");
     let foundry = root.join("foundry.toml");
-    if !hh_js.exists() && !hh_ts.exists() && !foundry.exists() {
+    if !foundry.exists() && !hh_js.exists() && !hh_ts.exists() {
         // by default, if framework is not detected, it will be 'src'
         // we want it to be the same as root
         config.src = ".".into();
-    }
 
+        let mut solidity_file_found_in_root = false;
+
+        for file in std::fs::read_dir(&root)? {
+            let file_path = file?.path();
+            if file_path.extension().is_some_and(|e| e == OsStr::new("sol")) {
+                solidity_file_found_in_root = true;
+            }
+        }
+
+        if !solidity_file_found_in_root {
+            let contracts = root.join("contracts");
+            let src = root.join("src");
+
+            if src.is_dir() {
+                config.src = "src".into();
+            } else if contracts.is_dir() {
+                config.src = "contracts".into();
+            }
+        }
+    }
     Ok(config)
 }
 
