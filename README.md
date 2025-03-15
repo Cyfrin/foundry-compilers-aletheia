@@ -10,7 +10,7 @@ foundry-compilers-aletheia = { git = "https://github.com/Cyfrin/foundry-compiler
 
 ```
 
-### Extract ASTs and other Evm Info
+Extract ASTs and other Evm Info
 
 ```rust
 use std::path::Path;
@@ -23,6 +23,10 @@ pub fn ast_info(root: &str) -> Result<DerivedAstEvmInfo> {
     derive_ast_and_evm_info(&config)
 }
 ```
+
+## Goal
+
+To be the fastest AST generator for [Aderyn](https://github.com/cyfrin/aderyn)
 
 ## Credits
 
