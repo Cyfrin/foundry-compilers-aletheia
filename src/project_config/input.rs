@@ -75,7 +75,7 @@ impl ProjectConfigInput {
                 if let Some(versioned_sources) = versioned_sources {
                     for (v, _, _) in &versioned_sources {
                         // ensure solc is installed
-                        let _ = Solc::find_or_install(&v)?;
+                        let _ = Solc::find_or_install(v)?;
                     }
                     let mut h = HashMap::new();
                     for (v, s, _) in versioned_sources {
@@ -85,14 +85,14 @@ impl ProjectConfigInput {
                 }
 
                 // expect no *.sol files
-                return Ok(Default::default());
+                Ok(Default::default())
             }
             SolcCompilerInput::Specific(solc) => {
                 let versioned_sources = HashMap::from_iter(vec![(
                     solc.version.clone(),
                     create_standard_json_for_ast(sources),
                 )]);
-                return Ok(versioned_sources);
+                Ok(versioned_sources)
             }
         }
     }
