@@ -107,6 +107,7 @@ impl ProjectConfigInputBuilder {
                 }
             }
 
+            e.dedup();
             e
         };
 
