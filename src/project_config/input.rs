@@ -39,8 +39,9 @@ pub enum SolcCompilerInput {
 }
 
 impl ProjectConfigInput {
-    pub fn make_asts(&self) -> Result<()> {
-        let _compiler_input = self.solc_input_for_ast_generation()?;
+    pub fn print_standard_json_solc_input(&self) -> Result<()> {
+        let compiler_input = self.solc_input_for_ast_generation()?;
+        println!("{:#?}", compiler_input);
         Ok(())
     }
 }
@@ -59,33 +60,31 @@ impl ProjectConfigInput {
 
         match &self.solc_compiler {
             SolcCompilerInput::AutoDetect => {
-                let graph = Graph::<SolData>::resolve_sources(&self.project_paths, sources)?;
-
                 let project = ProjectBuilder::<SolcCompiler>::default()
                     .paths(self.project_paths.clone()) // cheap enough to clone (doesn't contain content)
                     .build(Default::default())?;
 
-                // remove instead of get to avoid cloning
-                let versioned_sources = graph
-                    .into_sources_by_version(&project)?
-                    .sources
-                    .remove(&SolcLanguage::Solidity);
+                let solidity_sources = {
+                    let graph = Graph::<SolData>::resolve_sources(&self.project_paths, sources)?;
+                    graph.into_sources_by_version(&project)?.sources.remove(&SolcLanguage::Solidity)
+                };
 
-                if let Some(versioned_sources) = versioned_sources {
-                    for (v, _, _) in &versioned_sources {
-                        // ensure solc is installed
-                        let _ = Solc::find_or_install(v)?;
-                    }
-                    let mut h = HashMap::new();
-                    for (v, s, _) in versioned_sources {
-                        h.insert(v, create_standard_json_for_ast(s));
-                    }
-                    return Ok(h);
+                let Some(versioned_sources) = solidity_sources else {
+                    return Ok(Default::default()); // expect no *.sol files
+                };
+
+                // ensure all required solc versions are nstalled
+                for (v, _, _) in &versioned_sources {
+                    Solc::find_or_install(&v)?;
                 }
 
-                // expect no *.sol files
-                Ok(Default::default())
+                Ok(HashMap::from_iter(
+                    versioned_sources
+                        .into_iter()
+                        .map(|(v, s, _)| (v, create_standard_json_for_ast(s))),
+                ))
             }
+
             SolcCompilerInput::Specific(solc) => {
                 let versioned_sources = HashMap::from_iter(vec![(
                     solc.version.clone(),
