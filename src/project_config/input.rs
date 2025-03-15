@@ -7,8 +7,7 @@ use std::{
 use foundry_compilers::{
     Graph, ProjectBuilder, ProjectPathsConfig,
     artifacts::{
-        Ast, Settings, SolcInput, Sources, StandardJsonCompilerInput,
-        output_selection::OutputSelection,
+        Settings, SolcInput, Sources, StandardJsonCompilerInput, output_selection::OutputSelection,
     },
     resolver::parse::SolData,
     solc::{Solc, SolcCompiler, SolcLanguage},
