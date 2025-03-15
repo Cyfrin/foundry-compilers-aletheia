@@ -1,12 +1,17 @@
+//! Test the dependencies and challenge assumptions.
+//! Allows us to know how we can use these in library
+
 use foundry_compilers::solc::SolcCompiler;
 use foundry_rs_config::Config;
 use pretty_assertions::assert_eq;
 use std::{ffi::OsStr, path::Path};
 
 mod common {
+    use std::collections::HashMap;
+
     use foundry_compilers::{
         Graph, ProjectBuilder,
-        artifacts::{Settings, SolcInput, output_selection::OutputSelection},
+        artifacts::{Settings, SolcInput, Sources, output_selection::OutputSelection},
         resolver::parse::SolData,
         solc::{Solc, SolcCompiler, SolcLanguage},
     };
@@ -20,6 +25,11 @@ mod common {
     }
 
     pub fn can_be_grouped(root: &str) {
+        let g = get_group(root);
+        assert!(!g.is_empty());
+    }
+
+    pub fn get_group(root: &str) -> HashMap<semver::Version, Sources> {
         let raw_config = common::get_raw_config(root).sanitized();
         let project_paths = raw_config.project_paths();
 
@@ -34,7 +44,9 @@ mod common {
         )
         .unwrap();
 
-        assert!(graph.into_sources_by_version(&p).is_ok());
+        let resolved = graph.into_sources_by_version(&p).unwrap();
+        let versioned_sources = resolved.sources.get(&SolcLanguage::Solidity).unwrap().clone();
+        versioned_sources.into_iter().map(|(v, s, _)| (v, s)).collect::<HashMap<_, _>>()
     }
 
     #[test]
@@ -249,7 +261,9 @@ mod hardhat_basic {
     #[test]
     fn identifies_remappings_correctly() {
         let raw_config = common::get_raw_config(ROOT);
-        assert_eq!(raw_config.remappings.len(), 2);
+        let remaps = raw_config.get_all_remappings().collect::<Vec<_>>();
+        assert_eq!(remaps[0].name, "hardhat/");
+        assert_eq!(raw_config.remappings.len(), 1);
     }
 
     #[test]
@@ -264,9 +278,25 @@ mod hardhat_basic {
     }
 
     #[test]
+    fn group_contains_right_sources() {
+        let group = common::get_group(ROOT);
+        let sources = group.values().next().expect("no sources prsent");
+        assert_eq!(
+            sources
+                .keys()
+                .filter(|k| k.ends_with("console.sol") || k.ends_with("Lock.sol"))
+                .collect::<Vec<_>>()
+                .len(),
+            2
+        );
+        assert_eq!(sources.len(), 2);
+    }
+
+    #[test]
     fn identified_version_correctly() {
         let raw_config = common::get_raw_config(ROOT);
         let compiler = raw_config.solc_compiler().unwrap();
+        // NOTE: This is incorrect. It's actually a fixed version as declared in hardhat.config.ts
         assert!(matches!(compiler, SolcCompiler::AutoDetect));
     }
 }

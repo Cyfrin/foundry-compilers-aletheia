@@ -25,22 +25,18 @@ jobs:
       - name: Checkout Submodules
         run: git submodule update --init --recursive
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Install JS Dependencies
         run: |
-          cd test-configs/hardhat-basic
-          npm install
-          cd ../../
+          pnpm install --prefix test-configs/hardhat-basic
 
       - name: Restore Rust Cache
         uses: Swatinem/rust-cache@v2
 
       - name: Run tests
         run: |
+          ls test-configs/hardhat-basic/node_modules
           cargo build
           cargo test -- --nocapture
