@@ -114,7 +114,7 @@ impl ProjectConfigInputBuilder {
                 .libs
                 .iter()
                 .filter(|lib| lib.starts_with(&config.src))
-                .map(|p| p.clone())
+                .cloned()
                 .collect::<Vec<_>>();
             e.append(&mut unwanted);
 
