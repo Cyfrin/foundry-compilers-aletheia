@@ -1,5 +1,16 @@
+use semver::Version;
 use serde::Deserialize;
-use std::{collections::BTreeMap, path::PathBuf};
+use std::{
+    collections::{BTreeMap, HashMap},
+    path::PathBuf,
+};
+
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+pub struct VersionedAstOutputs {
+    pub version: Version,
+    pub compiler_output: SolcCompilerOutput,
+    pub is_included: HashMap<PathBuf, bool>,
+}
 
 /// Output type `solc` produces
 #[derive(Clone, Debug, Default, PartialEq, Eq, Deserialize)]
@@ -14,18 +25,22 @@ pub struct SolcCompilerOutput {
 pub struct AstContent {
     pub id: u32,
     #[serde(deserialize_with = "raw_map_string::deserialize")]
-    pub ast: String,
+    pub ast: Option<String>,
 }
 
 mod raw_map_string {
     use serde::{Deserialize, Deserializer};
     use serde_json::{self, Value};
 
-    pub fn deserialize<'de, D>(deserializer: D) -> Result<String, D::Error>
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
     where
         D: Deserializer<'de>,
     {
         let value: Value = Value::deserialize(deserializer)?;
-        serde_json::to_string(&value).map_err(serde::de::Error::custom)
+        if value.is_null() {
+            return Ok(None);
+        }
+        let string = serde_json::to_string(&value).map_err(serde::de::Error::custom)?;
+        Ok(Some(string))
     }
 }

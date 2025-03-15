@@ -81,6 +81,14 @@ mod common {
         assert_eq!(project_paths.read_sources().unwrap().len(), 2);
     }
 
+    #[test]
+    fn can_read_symlink() {
+        let path = Path::new("test-configs/foundry-symlink/src/TimerLink.sol");
+        let content = std::fs::read_to_string(path);
+        assert!(path.exists());
+        assert!(content.is_ok());
+    }
+
     // NOTE:
     // * [`Config::project_paths::<Solc>()`] has a bug which is that the `sources` field
     // on [`ProjectPaths`] although correctly identified in `Config`, get canonicalized
