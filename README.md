@@ -2,6 +2,14 @@
 
 ## Overview
 
+To simplify installation, add the following to `Cargo.toml`
+
+```toml
+[dependencies]
+foundry-compilers-aletheia = { git = "https://github.com/Cyfrin/foundry-compilers-aletheia", branch = "main", package = "foundry-compilers-aletheia" }
+
+```
+
 Expose AST generation interface for common project strucutures.
 
 ```rust
