@@ -1,10 +1,13 @@
 use std::path::PathBuf;
 
-use foundry_compilers::{ProjectPathsConfig, solc::SolcLanguage};
+use foundry_compilers::{
+    ProjectPathsConfig,
+    solc::{Solc, SolcLanguage},
+};
 use foundry_rs_config::filter::GlobMatcher;
 
 pub struct ProjectConfigInput {
-    /// Must have hardhat.config.ts/.js or foundry.toml or (it's FOUNDRY_
+    /// Root directory must contain hardhat.config.ts/.js or foundry.toml or (it's FOUNDRY_
     /// equivalet name)
     pub root: PathBuf,
 
@@ -22,6 +25,14 @@ pub struct ProjectConfigInput {
 
     /// Paths (sources) matching with these will be excluded
     pub skip: Vec<GlobMatcher>,
+
+    /// Solc Version to use for compiling
+    pub solc_compiler: SolcCompilerInput,
+}
+
+pub enum SolcCompilerInput {
+    AutoDetect,
+    Specific(Solc),
 }
 
 impl ProjectConfigInput {

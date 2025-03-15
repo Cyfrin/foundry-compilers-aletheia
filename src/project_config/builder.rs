@@ -1,33 +1,65 @@
 use crate::error::Result;
-use foundry_compilers::utils;
+use foundry_compilers::{
+    solc::{Solc, SolcCompiler},
+    utils,
+};
 use foundry_rs_config::Config;
+use semver::Version;
 use std::path::{Path, PathBuf};
 
-use super::ProjectConfigInput;
+use super::{ProjectConfigInput, SolcCompilerInput};
 
+/// ## Builder for [`ProjectConfigInput`]
+///
+/// Assumes defaults based on commonly used frameworks like
+/// Foundry, Hardhat, Soldeer also allowing you to speccify custom values with builder pattern
+///
+/// ### Note
+///
+/// Some files are automatically excluded *always* like tests, lib, dependencies, node_modules,
+/// etc based on the framework.
 pub struct ProjectConfigInputBuilder {
     root: PathBuf,
     sources: SourcesConfig,
     exclude: ExcludeConfig,
     include: IncludeConfig,
+    solc_version: SolcVersionConfig,
 }
 
+pub enum SolcVersionConfig {
+    /// Resolves sources by version either by graphs or reads from framework config.
+    /// If the framework config is set to specific version of Solc, it will be respected
+    Auto,
+
+    /// Force override [`SolcVersionConfig::Auto`]
+    Specific(Version),
+}
+
+/// Match paths of solidity files to be scanned
 pub enum SourcesConfig {
+    /// Resolve based on the framework or same as root in case of custom project
     AutoDetect,
+    /// Path to a directory relative to the root containing Solidity contracts
     Specific(PathBuf),
 }
 
+/// Match paths of solidity files to be excluded
 pub enum ExcludeConfig {
+    /// Does not exclude any file in [`SourcesConfig`].
     None,
+    /// Path segments of files to be excluded in addition to the automatically excluded files
     Specific(Vec<String>),
 }
 
+/// Match paths of solidity files to be included
 pub enum IncludeConfig {
+    /// Includes all files in [`SourcesConfig`] other than automatically excluded files.
     All,
+    /// Path segments of files to be included as a subset of [`SourcesConfig`]
     Specific(Vec<String>),
 }
 
-pub const EMPTY_STRING: &str = "";
+pub(crate) const EMPTY_STRING: &str = "";
 
 impl ProjectConfigInputBuilder {
     pub fn new(root: &Path) -> ProjectConfigInputBuilder {
@@ -36,6 +68,7 @@ impl ProjectConfigInputBuilder {
             sources: SourcesConfig::AutoDetect,
             exclude: ExcludeConfig::None,
             include: IncludeConfig::All,
+            solc_version: SolcVersionConfig::Auto,
         }
     }
     pub fn with_sources(mut self, sources: SourcesConfig) -> ProjectConfigInputBuilder {
@@ -50,6 +83,10 @@ impl ProjectConfigInputBuilder {
         self.include = include;
         self
     }
+    pub fn with_solc_version(mut self, version: SolcVersionConfig) -> ProjectConfigInputBuilder {
+        self.solc_version = version;
+        self
+    }
     pub fn build(self) -> Result<ProjectConfigInput> {
         if !self.root.exists() {
             return Err(String::from("Non existent root").into());
@@ -61,6 +98,8 @@ impl ProjectConfigInputBuilder {
             if let SourcesConfig::Specific(src) = self.sources {
                 c.src = src;
             }
+            // Override offline so that config.ensure_solc() can download solc.
+            c.offline = false;
             c.sanitized()
         };
 
@@ -127,6 +166,18 @@ impl ProjectConfigInputBuilder {
             }
         };
 
+        // Solc Compiler
+        let solc_compiler = match &self.solc_version {
+            SolcVersionConfig::Specific(solc_version) => {
+                let solc = Solc::find_or_install(solc_version)?;
+                SolcCompilerInput::Specific(solc)
+            }
+            SolcVersionConfig::Auto => match config.solc_compiler()? {
+                SolcCompiler::AutoDetect => SolcCompilerInput::AutoDetect,
+                SolcCompiler::Specific(solc) => SolcCompilerInput::Specific(solc),
+            },
+        };
+
         Ok(ProjectConfigInput {
             project_paths: config.project_paths(),
             root: self.root,
@@ -134,6 +185,7 @@ impl ProjectConfigInputBuilder {
             exclude_containing,
             exclude_starting,
             skip: config.skip,
+            solc_compiler,
         })
     }
 }
