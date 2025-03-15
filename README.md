@@ -1,4 +1,4 @@
-# Foundry Compilers Aletheia 
+# Foundry Compilers Aletheia
 
 ## Fork of [`foundry-compilers`](https://github.com/foundry-rs/compilers) 
 
