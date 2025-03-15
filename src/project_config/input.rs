@@ -1,6 +1,6 @@
 use crate::{Result, SolcCompilerOutput};
 use std::{
-    collections::{HashMap, hash_map::Entry},
+    collections::HashMap,
     path::{Path, PathBuf},
 };
 
@@ -112,8 +112,8 @@ impl ProjectConfigInput {
         Ok(solc_input.into_iter().map(|(k, v)| (k, v.into())).collect())
     }
 
-    pub fn make_asts(&self) -> Result<HashMap<Version, Vec<VersionedAstOutputs>>> {
-        let mut asts: HashMap<_, Vec<_>> = HashMap::new();
+    pub fn make_asts(&self) -> Result<Vec<VersionedAstOutputs>> {
+        let mut asts: Vec<VersionedAstOutputs> = Default::default();
 
         for (version, solc_input) in self.solc_input_for_ast_generation()? {
             // Grab the relevant solc compiler
@@ -136,14 +136,7 @@ impl ProjectConfigInput {
                 VersionedAstOutputs { version: version.clone(), compiler_output, is_included };
 
             // Store the ASTs
-            match asts.entry(version) {
-                Entry::Occupied(mut o) => {
-                    o.get_mut().push(outputs);
-                }
-                Entry::Vacant(v) => {
-                    v.insert(vec![outputs]);
-                }
-            };
+            asts.push(outputs);
         }
         Ok(asts)
     }

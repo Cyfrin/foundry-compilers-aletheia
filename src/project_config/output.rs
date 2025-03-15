@@ -8,30 +8,33 @@ use std::{
 
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 pub struct DerivedAstEvmInfo {
-    /// [`VersionedAstOutputs`] grouped by the version of Solidity compiler to use.
-    pub versioned_asts: HashMap<Version, Vec<VersionedAstOutputs>>,
-    /// EVM version mentioned `foundry.toml` which default to Cancun
+    /// Groups of AST outputs, each is it's own context
+    pub versioned_asts: Vec<VersionedAstOutputs>,
+    /// EVM version derived from configuration file
     pub evm_version: EvmVersion,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 pub struct VersionedAstOutputs {
+    /// Solidity version used to compile this group of Solidity files
     pub version: Version,
+    /// Deserialized output of running `solc` command
     pub compiler_output: SolcCompilerOutput,
+    /// Boolean that is `true` for files that pass the include and exclude tests/arguments
+    /// supplied when creating [`super::ProjectConfigInput`]
     pub is_included: HashMap<PathBuf, bool>,
 }
 
 /// Output type `solc` produces
 #[derive(Clone, Debug, Default, PartialEq, Eq, Deserialize)]
 pub struct SolcCompilerOutput {
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub errors: Vec<foundry_compilers::artifacts::Error>,
     #[serde(default)]
-    pub sources: BTreeMap<PathBuf, AstContent>,
+    pub sources: BTreeMap<PathBuf, AstSourceFile>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
-pub struct AstContent {
+pub struct AstSourceFile {
     pub id: u32,
     #[serde(deserialize_with = "raw_map_string::deserialize")]
     pub ast: Option<String>,
