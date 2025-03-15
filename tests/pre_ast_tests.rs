@@ -1,6 +1,3 @@
-//! Test the dependencies and challenge assumptions.
-//! Allows us to know how we can use these in library
-
 use pretty_assertions::assert_eq;
 
 #[allow(unused_imports)]
