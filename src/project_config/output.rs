@@ -8,7 +8,9 @@ use std::{
 
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 pub struct DerivedAstEvmInfo {
+    /// [`VersionedAstOutputs`] grouped by the version of Solidity compiler to use.
     pub versioned_asts: HashMap<Version, Vec<VersionedAstOutputs>>,
+    /// EVM version mentioned `foundry.toml` which default to Cancun
     pub evm_version: EvmVersion,
 }
 
