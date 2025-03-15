@@ -24,6 +24,14 @@ pub fn ast_info(root: &str) -> Result<DerivedAstEvmInfo> {
 }
 ```
 
+## Credits
+
+This project exists thanks to all the people who [contribute](/CONTRIBUTING.md).<br>
+
+<a href="https://github.com/cyfrin/foundry-compilers-aletheia/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=cyfrin/foundry-compilers-aletheia" />
+</a>
+
 ## Attribution
 
 #### [`foundry-compilers`](https://github.com/foundry-rs/compilers) 
