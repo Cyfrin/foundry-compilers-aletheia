@@ -14,6 +14,7 @@ use foundry_compilers::{
     solc::{Solc, SolcCompiler, SolcLanguage},
 };
 use foundry_rs_config::filter::GlobMatcher;
+use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use semver::Version;
 
 use super::VersionedAstOutputs;
@@ -113,9 +114,7 @@ impl ProjectConfigInput {
     }
 
     pub fn make_asts(&self) -> Result<Vec<VersionedAstOutputs>> {
-        let mut asts: Vec<VersionedAstOutputs> = Default::default();
-
-        for (version, solc_input) in self.solc_input_for_ast_generation()? {
+        let make_ast = |version: &Version, solc_input: &SolcInput| -> Result<VersionedAstOutputs> {
             // Grab the relevant solc compiler
             let solc = Solc::find_or_install(&version)?;
 
@@ -129,12 +128,19 @@ impl ProjectConfigInput {
                 compiler_output.sources.keys().filter(|k| self.is_included(k)).cloned().collect();
 
             // Versioned Ast
-            let outputs =
-                VersionedAstOutputs { version: version.clone(), compiler_output, included_files };
+            Ok(VersionedAstOutputs { version: version.clone(), compiler_output, included_files })
+        };
 
-            // Store the ASTs
-            asts.push(outputs);
+        let mut asts: Vec<VersionedAstOutputs> = Default::default();
+
+        let ast_results: Vec<_> =
+            self.solc_input_for_ast_generation()?.par_iter().map(|(v, s)| make_ast(v, s)).collect();
+
+        for ast_result in ast_results {
+            let ast = ast_result?;
+            asts.push(ast);
         }
+
         Ok(asts)
     }
 
