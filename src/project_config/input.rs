@@ -1,15 +1,20 @@
 use crate::Result;
-use std::{collections::HashMap, path::PathBuf};
+use std::{
+    collections::{BTreeMap, HashMap},
+    path::PathBuf,
+};
 
 use foundry_compilers::{
     Graph, ProjectBuilder, ProjectPathsConfig,
     artifacts::{
-        Settings, SolcInput, Sources, StandardJsonCompilerInput, output_selection::OutputSelection,
+        Ast, Settings, SolcInput, SourceFile, Sources, StandardJsonCompilerInput,
+        output_selection::OutputSelection,
     },
     resolver::parse::SolData,
     solc::{Solc, SolcCompiler, SolcLanguage},
 };
 use foundry_rs_config::filter::GlobMatcher;
+use serde::{Deserialize, Serialize};
 
 pub struct ProjectConfigInput {
     /// Root directory must contain hardhat.config.ts/.js or foundry.toml or (it's FOUNDRY_
@@ -38,6 +43,21 @@ pub struct ProjectConfigInput {
 pub enum SolcCompilerInput {
     AutoDetect,
     Specific(Solc),
+}
+
+///// Output type `solc` produces
+#[derive(Clone, Debug, Default, PartialEq, Eq, Deserialize)]
+pub struct SolcCompilerOutput {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub errors: Vec<foundry_compilers::artifacts::Error>,
+    #[serde(default)]
+    pub sources: BTreeMap<PathBuf, AstContent>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+pub struct AstContent {
+    pub id: u32,
+    pub ast: Option<Ast>,
 }
 
 impl ProjectConfigInput {
@@ -94,5 +114,20 @@ impl ProjectConfigInput {
     ) -> Result<HashMap<semver::Version, StandardJsonCompilerInput>> {
         let solc_input = self.solc_input_for_ast_generation()?;
         Ok(solc_input.into_iter().map(|(k, v)| (k, v.into())).collect())
+    }
+
+    pub fn make_asts(&self) -> Result<()> {
+        let solc_input_map = self.solc_input_for_ast_generation()?;
+        for (version, solc_input) in solc_input_map {
+            let solc = Solc::find_or_install(&version)?;
+
+            let output = solc.compile_output(&solc_input)?;
+            let str_output = std::str::from_utf8(&output)?;
+
+            let compiler_output: SolcCompilerOutput = serde_json::from_str(str_output)?;
+
+            println!("Version: {:#?}\nCompiled Output: {:#?}\n\n", version, compiler_output);
+        }
+        Ok(())
     }
 }
