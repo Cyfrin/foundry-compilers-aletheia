@@ -1,7 +1,5 @@
 # Foundry Compilers Aletheia
 
-## Fork of [`foundry-compilers`](https://github.com/foundry-rs/compilers) 
-
 ## Overview
 
 Expose AST generation interface for common project strucutures.
@@ -16,4 +14,9 @@ Expose AST generation interface for common project strucutures.
         Ok(compiler_input)
     }
 ```
+
+## Attribution
+
+### Uses [`foundry-compilers`](https://github.com/foundry-rs/compilers) 
+### Vendored [`foundry-config-rs`](https://github.com/foundry-rs/foundry) 
 
