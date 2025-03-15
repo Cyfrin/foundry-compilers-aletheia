@@ -3,7 +3,9 @@ use std::{collections::HashMap, path::PathBuf};
 
 use foundry_compilers::{
     Graph, ProjectBuilder, ProjectPathsConfig,
-    artifacts::{Settings, SolcInput, Sources, output_selection::OutputSelection},
+    artifacts::{
+        Settings, SolcInput, Sources, StandardJsonCompilerInput, output_selection::OutputSelection,
+    },
     resolver::parse::SolData,
     solc::{Solc, SolcCompiler, SolcLanguage},
 };
@@ -39,7 +41,9 @@ pub enum SolcCompilerInput {
 }
 
 impl ProjectConfigInput {
-    pub fn solc_input_for_ast_generation(&self) -> Result<HashMap<semver::Version, SolcInput>> {
+    pub fn solc_input_for_ast_generation(
+        &self,
+    ) -> Result<HashMap<semver::Version, StandardJsonCompilerInput>> {
         let create_standard_json_for_ast = |sources: Sources| -> SolcInput {
             SolcInput::new(
                 SolcLanguage::Solidity,
@@ -73,16 +77,17 @@ impl ProjectConfigInput {
                 Ok(HashMap::from_iter(
                     versioned_sources
                         .into_iter()
-                        .map(|(v, s, _)| (v, create_standard_json_for_ast(s))),
+                        .map(|(v, s, _)| (v, create_standard_json_for_ast(s).into())),
                 ))
             }
 
             SolcCompilerInput::Specific(solc) => {
                 let versioned_sources = HashMap::from_iter(vec![(
                     solc.version.clone(),
-                    create_standard_json_for_ast(sources),
+                    create_standard_json_for_ast(sources).try_into()?,
                 )]);
                 Ok(versioned_sources)
+
             }
         }
     }
