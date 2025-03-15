@@ -1137,6 +1137,7 @@ dependencies = [
  "foundry-compilers",
  "foundry-config",
  "pretty_assertions",
+ "rayon",
  "semver 1.0.26",
  "serde",
  "serde_json",
