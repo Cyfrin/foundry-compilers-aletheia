@@ -41,9 +41,7 @@ pub enum SolcCompilerInput {
 }
 
 impl ProjectConfigInput {
-    pub fn solc_input_for_ast_generation(
-        &self,
-    ) -> Result<HashMap<semver::Version, StandardJsonCompilerInput>> {
+    pub fn solc_input_for_ast_generation(&self) -> Result<HashMap<semver::Version, SolcInput>> {
         let create_standard_json_for_ast = |sources: Sources| -> SolcInput {
             SolcInput::new(
                 SolcLanguage::Solidity,
@@ -77,18 +75,24 @@ impl ProjectConfigInput {
                 Ok(HashMap::from_iter(
                     versioned_sources
                         .into_iter()
-                        .map(|(v, s, _)| (v, create_standard_json_for_ast(s).into())),
+                        .map(|(v, s, _)| (v, create_standard_json_for_ast(s))),
                 ))
             }
 
             SolcCompilerInput::Specific(solc) => {
                 let versioned_sources = HashMap::from_iter(vec![(
                     solc.version.clone(),
-                    create_standard_json_for_ast(sources).try_into()?,
+                    create_standard_json_for_ast(sources),
                 )]);
                 Ok(versioned_sources)
-
             }
         }
+    }
+
+    pub fn standard_json_for_ast_generation(
+        &self,
+    ) -> Result<HashMap<semver::Version, StandardJsonCompilerInput>> {
+        let solc_input = self.solc_input_for_ast_generation()?;
+        Ok(solc_input.into_iter().map(|(k, v)| (k, v.into())).collect())
     }
 }

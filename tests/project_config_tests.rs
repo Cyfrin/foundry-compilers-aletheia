@@ -8,12 +8,10 @@ mod common {
     use std::{collections::HashMap, path::Path};
 
     use super::{assert_eq, *};
-    use foundry_compilers::artifacts::{SolcInput, StandardJsonCompilerInput};
+    use foundry_compilers::artifacts::SolcInput;
     use foundry_compilers_aletheia::{ProjectConfigInputBuilder, Result};
 
-    pub fn get_compiler_input(
-        root: &str,
-    ) -> Result<HashMap<semver::Version, StandardJsonCompilerInput>> {
+    pub fn get_compiler_input(root: &str) -> Result<HashMap<semver::Version, SolcInput>> {
         let config_input = ProjectConfigInputBuilder::new(Path::new(root)).build()?;
         let ast_input = config_input.solc_input_for_ast_generation()?;
         Ok(ast_input)
@@ -39,6 +37,9 @@ mod foundry_basic {
 
 #[allow(unused_imports)]
 mod foundry_soldeer_basic {
+
+    use foundry_compilers::solc::Solc;
+
     use super::{assert_eq, *};
 
     use crate::common::get_compiler_input;

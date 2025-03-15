@@ -18,7 +18,7 @@ use foundry_compilers_aletheia::{ProjectConfigInputBuilder, Result};
 
 pub fn get_compiler_input(root: &str) -> Result<HashMap<semver::Version, StandardJsonCompilerInput>> {
     let config_input = ProjectConfigInputBuilder::new(Path::new(root)).build()?;
-    let compiler_input = config_input.solc_input_for_ast_generation()?;
+    let compiler_input = config_input.standard_json_for_ast_generation()?;
     Ok(compiler_input)
 }
 ```
