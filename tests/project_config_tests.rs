@@ -13,10 +13,11 @@ mod common {
 
     pub fn get_compiler_input(root: &str) -> Result<HashMap<semver::Version, SolcInput>> {
         let config_input = ProjectConfigInputBuilder::new(Path::new(root)).build()?;
-        config_input.make_asts()?;
         let ast_input = config_input.solc_input_for_ast_generation()?;
         Ok(ast_input)
     }
+
+    pub fn create_asts(root: &str) {}
 }
 
 #[allow(unused_imports)]

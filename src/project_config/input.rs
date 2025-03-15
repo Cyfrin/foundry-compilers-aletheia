@@ -7,7 +7,8 @@ use std::{
 use foundry_compilers::{
     Graph, ProjectBuilder, ProjectPathsConfig,
     artifacts::{
-        Settings, SolcInput, Sources, StandardJsonCompilerInput, output_selection::OutputSelection,
+        EvmVersion, Settings, SolcInput, Sources, StandardJsonCompilerInput,
+        output_selection::OutputSelection,
     },
     resolver::parse::SolData,
     solc::{Solc, SolcCompiler, SolcLanguage},
@@ -15,7 +16,7 @@ use foundry_compilers::{
 use foundry_rs_config::filter::GlobMatcher;
 use semver::Version;
 
-use super::VersionedAstOutputs;
+use super::{DerivedAstEvmInfo, VersionedAstOutputs};
 
 #[derive(Debug)]
 pub struct ProjectConfigInput {
@@ -40,6 +41,9 @@ pub struct ProjectConfigInput {
 
     /// Solc Version to use for compiling
     pub solc_compiler: SolcCompilerConfigInput,
+
+    /// Evm Version
+    pub evm_version: EvmVersion,
 }
 
 #[derive(Debug)]
@@ -168,4 +172,11 @@ impl ProjectConfigInput {
         // Include containing
         self.include_containing.iter().any(|include_string| path_str.contains(include_string))
     }
+}
+
+pub fn derive_ast_and_evm_info(config: &ProjectConfigInput) -> Result<DerivedAstEvmInfo> {
+    let asts = config.make_asts()?;
+    let evm_version = config.evm_version;
+
+    Ok(DerivedAstEvmInfo { versioned_asts: asts, evm_version })
 }

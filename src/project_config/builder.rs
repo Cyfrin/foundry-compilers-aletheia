@@ -186,6 +186,7 @@ impl ProjectConfigInputBuilder {
             exclude_starting,
             skip: config.skip,
             solc_compiler,
+            evm_version: config.evm_version,
         })
     }
 }

@@ -1,9 +1,16 @@
+use foundry_compilers::artifacts::EvmVersion;
 use semver::Version;
 use serde::Deserialize;
 use std::{
     collections::{BTreeMap, HashMap},
     path::PathBuf,
 };
+
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
+pub struct DerivedAstEvmInfo {
+    pub versioned_asts: HashMap<Version, Vec<VersionedAstOutputs>>,
+    pub evm_version: EvmVersion,
+}
 
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 pub struct VersionedAstOutputs {
