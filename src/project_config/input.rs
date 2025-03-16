@@ -158,8 +158,11 @@ impl ProjectConfigInput {
             return false;
         }
 
-        let path_str =
-            path.strip_prefix(self.root.clone()).unwrap_or(path).as_os_str().to_string_lossy();
+        let path_str = path
+            .strip_prefix(self.root.clone())
+            .expect("failed to strip prefix from root")
+            .as_os_str()
+            .to_string_lossy();
 
         // Exclude containing
         if self.exclude_containing.iter().any(|exclude_string| path_str.contains(exclude_string)) {
