@@ -11,7 +11,7 @@ use foundry_compilers::{
     utils,
 };
 use foundry_rs_config::filter::GlobMatcher;
-use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use semver::Version;
 use std::{
     collections::HashMap,
@@ -114,7 +114,7 @@ impl ProjectConfigInput {
     }
 
     pub fn make_asts(&self) -> Result<Vec<VersionedAstOutputs>> {
-        let make_ast = |version: &Version, solc_input: &SolcInput| -> Result<VersionedAstOutputs> {
+        let make_ast = |version: Version, solc_input: SolcInput| -> Result<VersionedAstOutputs> {
             // Grab the relevant solc compiler
             let solc = Solc::find_or_install(&version)?;
 
@@ -128,13 +128,21 @@ impl ProjectConfigInput {
                 compiler_output.sources.keys().filter(|k| self.is_included(k)).cloned().collect();
 
             // Versioned Ast
-            Ok(VersionedAstOutputs { version: version.clone(), compiler_output, included_files })
+            Ok(VersionedAstOutputs {
+                version: version.clone(),
+                compiler_output,
+                included_files,
+                sources: solc_input.sources,
+            })
         };
 
         let mut asts: Vec<VersionedAstOutputs> = Default::default();
 
-        let ast_results: Vec<_> =
-            self.solc_input_for_ast_generation()?.par_iter().map(|(v, s)| make_ast(v, s)).collect();
+        let ast_results: Vec<_> = self
+            .solc_input_for_ast_generation()?
+            .into_par_iter()
+            .map(|(v, s)| make_ast(v, s))
+            .collect();
 
         for ast_result in ast_results {
             let ast = ast_result?;
@@ -146,6 +154,11 @@ impl ProjectConfigInput {
 
     /// Returns if a file should be included
     pub(crate) fn is_included(&self, path: &Path) -> bool {
+        // Inside the src directory
+        if path.strip_prefix(self.project_paths.sources.clone()).is_err() {
+            return false;
+        }
+
         // Auto exclude
         if self.exclude_starting.iter().any(|exclude| path.starts_with(exclude)) {
             return false;

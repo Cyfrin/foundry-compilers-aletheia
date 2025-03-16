@@ -1,4 +1,4 @@
-use foundry_compilers::artifacts::EvmVersion;
+use foundry_compilers::artifacts::{EvmVersion, Sources};
 use semver::Version;
 use serde::Deserialize;
 use std::{
@@ -23,6 +23,8 @@ pub struct VersionedAstOutputs {
     /// Set of files that pass the include and exclude tests/arguments
     /// supplied when creating [`super::ProjectConfigInput`]
     pub included_files: HashSet<PathBuf>,
+    /// Key Value store contains the content for all Paths in context
+    pub sources: Sources,
 }
 
 /// Output type `solc` produces
