@@ -1,8 +1,6 @@
-use std::path::{Path, PathBuf};
-
-use walkdir::WalkDir;
-
 use super::ProjectConfigInput;
+use std::path::{Path, PathBuf};
+use walkdir::WalkDir;
 
 pub fn source_files_iter(
     root: &Path,

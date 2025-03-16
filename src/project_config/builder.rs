@@ -1,3 +1,4 @@
+use super::{ProjectConfigInput, SolcCompilerConfigInput};
 use crate::Result;
 use foundry_compilers::{
     solc::{Solc, SolcCompiler},
@@ -9,8 +10,6 @@ use std::{
     ffi::OsStr,
     path::{Path, PathBuf},
 };
-
-use super::{ProjectConfigInput, SolcCompilerConfigInput};
 
 /// ## Builder for [`ProjectConfigInput`]
 ///

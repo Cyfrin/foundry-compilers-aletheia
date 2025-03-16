@@ -1,9 +1,4 @@
 use crate::{Result, SolcCompilerOutput};
-use std::{
-    collections::HashMap,
-    path::{Path, PathBuf},
-};
-
 use foundry_compilers::{
     Graph, ProjectBuilder, ProjectPathsConfig,
     artifacts::{
@@ -16,6 +11,10 @@ use foundry_compilers::{
 use foundry_rs_config::filter::GlobMatcher;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use semver::Version;
+use std::{
+    collections::HashMap,
+    path::{Path, PathBuf},
+};
 
 use super::{VersionedAstOutputs, utils::source_files_iter};
 
@@ -159,7 +158,8 @@ impl ProjectConfigInput {
             return false;
         }
 
-        let path_str = path.as_os_str().to_string_lossy();
+        let path_str =
+            path.strip_prefix(self.root.clone()).unwrap_or(path).as_os_str().to_string_lossy();
 
         // Exclude containing
         if self.exclude_containing.iter().any(|exclude_string| path_str.contains(exclude_string)) {
