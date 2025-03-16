@@ -147,10 +147,8 @@ impl ProjectConfigInput {
     /// Returns if a file should be included
     pub(crate) fn is_included(&self, path: &Path) -> bool {
         // Auto exclude
-        for x in &self.exclude_starting {
-            if path.starts_with(x) {
-                return false;
-            }
+        if self.exclude_starting.iter().any(|exclude| path.starts_with(exclude)) {
+            return false;
         }
 
         // skip (value in foundry.toml)
