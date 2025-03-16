@@ -1,3 +1,4 @@
+use super::{VersionedAstOutputs, utils::source_files_iter};
 use crate::{Result, SolcCompilerOutput};
 use foundry_compilers::{
     Graph, ProjectBuilder, ProjectPathsConfig,
@@ -7,6 +8,7 @@ use foundry_compilers::{
     },
     resolver::parse::SolData,
     solc::{Solc, SolcCompiler, SolcLanguage},
+    utils,
 };
 use foundry_rs_config::filter::GlobMatcher;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
@@ -15,8 +17,6 @@ use std::{
     collections::HashMap,
     path::{Path, PathBuf},
 };
-
-use super::{VersionedAstOutputs, utils::source_files_iter};
 
 #[derive(Debug)]
 pub struct ProjectConfigInput {
@@ -158,8 +158,10 @@ impl ProjectConfigInput {
             return false;
         }
 
+        let root = utils::canonicalize(self.root.clone()).expect("root failed to canonicalize");
+
         let path_str = path
-            .strip_prefix(self.root.clone())
+            .strip_prefix(root)
             .expect("failed to strip prefix from root")
             .as_os_str()
             .to_string_lossy();
