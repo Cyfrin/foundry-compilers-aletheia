@@ -79,16 +79,22 @@ impl ProjectConfigInput {
     pub fn make_asts(&self) -> Result<Vec<VersionedAstOutputs>> {
         let make_ast = |version: Version, solc_input: SolcInput| -> Result<VersionedAstOutputs> {
             // Grab the relevant solc compiler
-            let mut solc = Solc::find_or_install(&version)?;
+            let solc = Solc::find_or_install(&version)?;
+
+            // I have tried below stuff. It gives incorrect results on Templegold
+            // (hardhat+foundry project) and on pure foundry project like Sablier
+            // setting the base paths fails the compilation. Source File Not Found
 
             // Explicitly setting base path will trigger changing current_dir of solc process to
             // root directory. Logic is inside [`Solc::configure_cmd`]
-            solc.base_path = Some(utils::canonicalize(self.root.clone())?);
+            //solc.base_path = Some(std::fs::canonicalize(self.root.clone())?);
+            //solc.base_path = Some("contracts".into());
 
             // Include and allow paths may be extra parameters mentioned in foundry.toml which we
             // proxy to solc
-            solc.include_paths = self.include_paths.iter().cloned().collect();
-            solc.allow_paths = self.allow_paths.iter().cloned().collect();
+            //solc.include_paths = self.project_paths.include_paths.clone();
+            //solc.allow_paths = self.project_paths.allowed_paths.clone();
+            //println!("SIP, SAP: {:?} {:?}", solc.include_paths, solc.allow_paths);
 
             // Retrieve the ASTs
             let output = solc.compile_output(&solc_input)?;

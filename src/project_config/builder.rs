@@ -184,8 +184,6 @@ impl ProjectConfigInputBuilder {
         };
 
         Ok(ProjectConfigInput {
-            allow_paths: config.allow_paths.clone(), // Cheap to clone a few strings
-            include_paths: config.include_paths.clone(),
             project_paths: config.project_paths(),
             root: self.root,
             include_containing,

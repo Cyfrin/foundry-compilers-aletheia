@@ -32,12 +32,6 @@ pub struct ProjectConfigInput {
 
     /// Evm Version
     pub evm_version: EvmVersion,
-
-    /// Custom allow paths, if any
-    pub allow_paths: Vec<PathBuf>,
-
-    /// Custom include paths, if any
-    pub include_paths: Vec<PathBuf>,
 }
 
 #[derive(Debug)]
