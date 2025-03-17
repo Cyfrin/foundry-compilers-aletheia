@@ -79,7 +79,16 @@ impl ProjectConfigInput {
     pub fn make_asts(&self) -> Result<Vec<VersionedAstOutputs>> {
         let make_ast = |version: Version, solc_input: SolcInput| -> Result<VersionedAstOutputs> {
             // Grab the relevant solc compiler
-            let solc = Solc::find_or_install(&version)?;
+            let mut solc = Solc::find_or_install(&version)?;
+
+            // Explicitly setting base path will trigger changing current_dir of solc process to
+            // root directory. Logic is inside [`Solc::configure_cmd`]
+            solc.base_path = Some(utils::canonicalize(self.root.clone())?);
+
+            // Include and allow paths may be extra parameters mentioned in foundry.toml which we
+            // proxy to solc
+            solc.include_paths = self.include_paths.iter().cloned().collect();
+            solc.allow_paths = self.allow_paths.iter().cloned().collect();
 
             // Retrieve the ASTs
             let output = solc.compile_output(&solc_input)?;
