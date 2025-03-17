@@ -24,7 +24,7 @@ mod error;
 mod project_config;
 
 pub use error::*;
-pub use foundry_compilers::artifacts::{self as artifacts};
+pub use foundry_compilers::artifacts::Source;
 pub use project_config::*;
 
 /// Returns AST and EVM based info based on foundry/hardhat's configuration (or) custom framework.
