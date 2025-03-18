@@ -1,5 +1,5 @@
 use super::{ProjectConfigInput, SolcCompilerConfigInput, VersionedAstOutputs};
-use crate::{Result, SolcCompilerOutput};
+use crate::{Result, SolcCompilerOutput, project_config::command::compile_output};
 use foundry_compilers::{
     Graph, ProjectBuilder,
     artifacts::{
@@ -79,7 +79,7 @@ impl ProjectConfigInput {
     pub fn make_asts(&self) -> Result<Vec<VersionedAstOutputs>> {
         let make_ast = |version: Version, solc_input: SolcInput| -> Result<VersionedAstOutputs> {
             // Grab the relevant solc compiler
-            let solc = Solc::find_or_install(&version)?;
+            let mut solc = Solc::find_or_install(&version)?;
 
             // I have tried below stuff. It gives incorrect results on Templegold
             // (hardhat+foundry project) and on pure foundry project like Sablier
@@ -87,17 +87,18 @@ impl ProjectConfigInput {
 
             // Explicitly setting base path will trigger changing current_dir of solc process to
             // root directory. Logic is inside [`Solc::configure_cmd`]
-            //solc.base_path = Some(std::fs::canonicalize(self.root.clone())?);
-            //solc.base_path = Some("contracts".into());
+            // solc.base_path = Some(std::fs::canonicalize(self.root.clone())?);
+            // solc.base_path = Some("contracts".into());
 
             // Include and allow paths may be extra parameters mentioned in foundry.toml which we
             // proxy to solc
-            //solc.include_paths = self.project_paths.include_paths.clone();
-            //solc.allow_paths = self.project_paths.allowed_paths.clone();
-            //println!("SIP, SAP: {:?} {:?}", solc.include_paths, solc.allow_paths);
+            // solc.include_paths = self.project_paths.include_paths.clone();
+            // println!("SIP, SAP: {:?} {:?}", solc.include_paths, solc.allow_paths);
+            solc.allow_paths.insert(self.root.clone());
 
             // Retrieve the ASTs
-            let output = solc.compile_output(&solc_input)?;
+            let output = compile_output(&solc, self.root.as_path(), &solc_input)?;
+
             let str_output = std::str::from_utf8(&output)?;
             let compiler_output: SolcCompilerOutput = serde_json::from_str(str_output)?;
 

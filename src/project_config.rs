@@ -1,4 +1,5 @@
 mod builder;
+mod command;
 mod input;
 mod output;
 mod utils;
