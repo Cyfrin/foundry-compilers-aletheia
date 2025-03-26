@@ -2,9 +2,9 @@
 e = "run --example"
 tc = "test -- --nocapture"
 
-[source."git+https://github.com/foundry-rs/foundry?branch=master"]
+[source."git+https://github.com/foundry-rs/foundry?tag=nightly-539fd9611e213c0e72e5524b6030d00bf21c9587"]
 git = "https://github.com/foundry-rs/foundry"
-branch = "master"
+tag = "nightly-539fd9611e213c0e72e5524b6030d00bf21c9587"
 replace-with = "vendored-sources"
 
 [source.vendored-sources]
