@@ -3,9 +3,6 @@ pragma solidity ^0.8.28;
 
 import {console2} from "forge-std/console2.sol";
 
-// NOTE: Above doesnt work with pnpm hardhat test : (
-
-// import {console2} from "forge-std/console2.sol";
 // NOTE: Above doesn't work yet with foundry-compilers but works with pnpm hardhat test
 // Unfortunately we have to add 'src' in the path :(
 
