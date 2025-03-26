@@ -66,7 +66,8 @@ const config: HardhatUserConfig = {
        * Note: The config currently leaks internal IDs, but this will be fixed
        * in the future.
        */
-      "forge-std/=npm/forge-std@1.9.4/src/",
+      //"forge-std/=npm/forge-std@1.9.4/src/",
+      "forge-std/=node_modules/forge-std/src/",
     ],
   },
   /*
