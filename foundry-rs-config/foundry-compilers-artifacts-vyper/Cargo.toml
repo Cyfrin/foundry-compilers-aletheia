@@ -13,7 +13,7 @@
 edition = "2021"
 rust-version = "1.83"
 name = "foundry-compilers-artifacts-vyper"
-version = "0.13.3"
+version = "0.13.5"
 authors = ["Foundry Maintainers"]
 build = false
 exclude = [
@@ -48,10 +48,10 @@ features = [
 ]
 
 [dependencies.foundry-compilers-artifacts-solc]
-version = "0.13.3"
+version = "0.13.5"
 
 [dependencies.foundry-compilers-core]
-version = "0.13.3"
+version = "0.13.5"
 
 [dependencies.semver]
 version = "1.0"
@@ -65,7 +65,7 @@ features = [
 ]
 
 [dev-dependencies.foundry-compilers-core]
-version = "0.13.3"
+version = "0.13.5"
 features = ["test-utils"]
 
 [dev-dependencies.serde_json]

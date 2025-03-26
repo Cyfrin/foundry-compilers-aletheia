@@ -13,7 +13,7 @@
 edition = "2021"
 rust-version = "1.83"
 name = "foundry-compilers"
-version = "0.13.3"
+version = "0.13.5"
 authors = ["Foundry Maintainers"]
 build = false
 exclude = [
@@ -109,7 +109,7 @@ version = "6.0"
 version = "1"
 
 [dependencies.foundry-compilers-artifacts]
-version = "0.13.3"
+version = "0.13.5"
 features = [
     "checksum",
     "walkdir",
@@ -117,7 +117,7 @@ features = [
 ]
 
 [dependencies.foundry-compilers-core]
-version = "0.13.3"
+version = "0.13.5"
 features = ["regex"]
 
 [dependencies.fs_extra]
@@ -207,7 +207,7 @@ version = "1.0"
 version = "4.0.0"
 
 [dev-dependencies.foundry-compilers-core]
-version = "0.13.3"
+version = "0.13.5"
 features = ["test-utils"]
 
 [dev-dependencies.reqwest]

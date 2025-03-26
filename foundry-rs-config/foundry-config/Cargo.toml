@@ -78,7 +78,7 @@ features = ["foundry-compilers"]
 default-features = false
 
 [dependencies.foundry-compilers]
-version = "0.13.3"
+version = "0.13.5"
 features = ["svm-solc"]
 default-features = false
 
@@ -155,6 +155,7 @@ path-slash = "0.2"
 
 [lints.clippy]
 dbg-macro = "warn"
+explicit_iter_loop = "warn"
 literal-string-with-formatting-args = "allow"
 manual-string-new = "warn"
 octal-escapes = "allow"
