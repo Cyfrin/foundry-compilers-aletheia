@@ -1,1 +1,2 @@
 /target
+foundry-rs-config/**/*/target/**
