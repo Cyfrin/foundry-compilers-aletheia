@@ -31,6 +31,7 @@ jobs:
       - name: Install JS Dependencies
         run: |
           pnpm install --prefix test-configs/hardhat-basic
+          pnpm install --prefix test-configs/hardhat-mini
 
       - name: Restore Rust Cache
         uses: Swatinem/rust-cache@v2

@@ -117,6 +117,39 @@ mod hardhat_basic {
 }
 
 #[allow(unused_imports)]
+mod hardhat_mini {
+
+    use std::path::Path;
+
+    use foundry_compilers_aletheia::ProjectConfigInputBuilder;
+    use itertools::Itertools;
+
+    use super::{assert_eq, *};
+    use crate::common::get_compiler_input;
+
+    const ROOT: &str = "test-configs/hardhat-mini";
+
+    // NOTE: Uses custom project config
+
+    #[test]
+    fn compiler_input() {
+        let builder = ProjectConfigInputBuilder::new(Path::new(ROOT)).with_exclude(
+            foundry_compilers_aletheia::ExcludeConfig::Specific(vec![".t.sol".to_string()]),
+        );
+        let config_input = builder.build().unwrap();
+        let c = config_input.solc_input_for_ast_generation().unwrap();
+        assert_eq!(c.values().len(), 1); // 1 version group
+        let values = c.values().next().expect("No files found");
+        let source_files = values.sources.keys().collect_vec();
+        assert!(source_files[0].ends_with("contracts/Counter.sol"));
+        assert!(source_files[1].ends_with("contracts/ReverseCounter.sol"));
+        assert!(source_files[2].ends_with("src/console.sol"));
+        assert!(source_files[3].ends_with("src/console2.sol"));
+        assert_eq!(source_files.len(), 4);
+    }
+}
+
+#[allow(unused_imports)]
 mod foundry_fix_version {
 
     use semver::Version;
