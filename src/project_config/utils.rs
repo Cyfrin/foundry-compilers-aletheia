@@ -25,7 +25,10 @@ impl ProjectConfigInput {
             let mut settings = Settings::new(OutputSelection::ast_output_selection());
             settings.remappings = self.project_paths.remappings.clone();
             settings.sanitize(version, SolcLanguage::Solidity);
-            SolcInput::new(SolcLanguage::Solidity, sources, settings)
+            let root = utils::canonicalize(self.root.clone()).expect("root failed to canonicalize");
+            let mut solc_input = SolcInput::new(SolcLanguage::Solidity, sources, settings);
+            solc_input.strip_prefix(&root);
+            solc_input
         };
 
         let sources = Source::read_all_files(
@@ -81,15 +84,6 @@ impl ProjectConfigInput {
             // Grab the relevant solc compiler
             let mut solc = Solc::find_or_install(&version)?;
 
-            // I have tried below stuff. It gives incorrect results on Templegold
-            // (hardhat+foundry project) and on pure foundry project like Sablier
-            // setting the base paths fails the compilation. Source File Not Found
-
-            // Explicitly setting base path will trigger changing current_dir of solc process to
-            // root directory. Logic is inside [`Solc::configure_cmd`]
-            // solc.base_path = Some(std::fs::canonicalize(self.root.clone())?);
-            // solc.base_path = Some("contracts".into());
-
             // Include and allow paths may be extra parameters mentioned in foundry.toml which we
             // proxy to solc
             // solc.include_paths = self.project_paths.include_paths.clone();
@@ -133,6 +127,11 @@ impl ProjectConfigInput {
 
     /// Returns if a file should be included
     pub(crate) fn is_included(&self, path: &Path) -> bool {
+        let root = utils::canonicalize(self.root.clone()).expect("root failed to canonicalize");
+
+        // Construct the full path
+        let path = root.join(path);
+
         // Inside the src directory
         if path.strip_prefix(self.project_paths.sources.clone()).is_err() {
             return false;
@@ -144,11 +143,9 @@ impl ProjectConfigInput {
         }
 
         // skip (value in foundry.toml)
-        if self.skip.iter().any(|skipper| skipper.is_match(path)) {
+        if self.skip.iter().any(|skipper| skipper.is_match(&path)) {
             return false;
         }
-
-        let root = utils::canonicalize(self.root.clone()).expect("root failed to canonicalize");
 
         let path_str = path
             .strip_prefix(root)
