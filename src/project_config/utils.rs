@@ -89,6 +89,7 @@ impl ProjectConfigInput {
             // solc.include_paths = self.project_paths.include_paths.clone();
             // println!("SIP, SAP: {:?} {:?}", solc.include_paths, solc.allow_paths);
             solc.allow_paths.insert(self.root.clone());
+            solc.allow_paths.insert("/".into());
 
             // Retrieve the ASTs
             let output = compile_output(&solc, self.root.as_path(), &solc_input)?;
