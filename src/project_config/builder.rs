@@ -28,9 +28,11 @@ pub struct ProjectConfigInputBuilder {
     solc_version: SolcVersionConfig,
 }
 
+#[derive(Default)]
 pub enum SolcVersionConfig {
     /// Resolves sources by version either by graphs or reads from framework config.
     /// If the framework config is set to specific version of Solc, it will be respected
+    #[default]
     Auto,
 
     /// Force override [`SolcVersionConfig::Auto`]
@@ -38,25 +40,34 @@ pub enum SolcVersionConfig {
 }
 
 /// Match paths of solidity files to be scanned
+#[derive(Default)]
 pub enum SourcesConfig {
     /// Resolve based on the framework or same as root in case of custom project
+    #[default]
     AutoDetect,
+
     /// Path to a directory relative to the root containing Solidity contracts
     Specific(PathBuf),
 }
 
 /// Match paths of solidity files to be excluded
+#[derive(Default)]
 pub enum ExcludeConfig {
     /// Does not exclude any file in [`SourcesConfig`].
+    #[default]
     None,
+
     /// Path segments of files to be excluded in addition to the automatically excluded files
     Specific(Vec<String>),
 }
 
 /// Match paths of solidity files to be included
+#[derive(Default)]
 pub enum IncludeConfig {
     /// Includes all files in [`SourcesConfig`] other than automatically excluded files.
+    #[default]
     All,
+
     /// Path segments of files to be included as a subset of [`SourcesConfig`]
     Specific(Vec<String>),
 }
@@ -70,10 +81,10 @@ impl ProjectConfigInputBuilder {
     pub fn new(root: &Path) -> ProjectConfigInputBuilder {
         ProjectConfigInputBuilder {
             root: root.to_owned(),
-            sources: SourcesConfig::AutoDetect,
-            exclude: ExcludeConfig::None,
-            include: IncludeConfig::All,
-            solc_version: SolcVersionConfig::Auto,
+            sources: Default::default(),
+            exclude: Default::default(),
+            include: Default::default(),
+            solc_version: Default::default(),
         }
     }
     pub fn with_sources(mut self, sources: SourcesConfig) -> ProjectConfigInputBuilder {
