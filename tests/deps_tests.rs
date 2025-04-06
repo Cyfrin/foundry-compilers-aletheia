@@ -350,6 +350,7 @@ mod hardhat_dupsource {
         let sources = group.values().next().expect("no sources prsent");
         println!("{:#?}", sources.keys().collect_vec());
         assert_eq!(sources.keys().collect::<Vec<_>>().len(), 29); // forge-std is builtin contracts/
+        // In ast_tests.rs, we only see 3 sources
     }
 
     #[test]
