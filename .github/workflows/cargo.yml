@@ -32,6 +32,7 @@ jobs:
         run: |
           pnpm install --prefix test-configs/hardhat-basic
           pnpm install --prefix test-configs/hardhat-mini
+          npm install --prefix test-configs/hardhat-dupsource
 
       - name: Restore Rust Cache
         uses: Swatinem/rust-cache@v2
