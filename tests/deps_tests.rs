@@ -349,8 +349,7 @@ mod hardhat_dupsource {
         let group = common::get_group(ROOT);
         let sources = group.values().next().expect("no sources prsent");
         println!("{:#?}", sources.keys().collect_vec());
-        assert_eq!(sources.keys().collect::<Vec<_>>().len(), 29); // forge-std is built 
-        // contracts/
+        assert_eq!(sources.keys().collect::<Vec<_>>().len(), 29); // forge-std is builtin contracts/
     }
 
     #[test]
