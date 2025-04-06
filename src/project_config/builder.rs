@@ -162,6 +162,15 @@ impl ProjectConfigInputBuilder {
                 }
             }
 
+            // New versions od hardhat include forge-std directly inside contracts/
+            let forge_std = self.root.join("contracts").join("forge-std");
+            if forge_std.is_dir() {
+                let forge_std_norm = utils::canonicalize(forge_std)?;
+                if forge_std_norm.starts_with(&config.src) {
+                    e.push(forge_std_norm);
+                }
+            }
+
             e.dedup();
             e
         };

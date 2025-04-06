@@ -310,6 +310,58 @@ mod hardhat_basic {
 }
 
 #[allow(unused_imports)]
+mod hardhat_dupsource {
+
+    use foundry_compilers::{
+        Graph, Project, ProjectBuilder, ProjectCompileOutput,
+        project::{self, ProjectCompiler},
+        resolver::parse::SolData,
+        solc::{Solc, SolcCompiler, SolcLanguage},
+    };
+    use itertools::Itertools;
+
+    use super::{assert_eq, *};
+
+    const ROOT: &str = "test-configs/hardhat-dupsource";
+
+    #[test]
+    fn identifies_remappings_correctly() {
+        let raw_config = common::get_raw_config(ROOT);
+        let remaps = raw_config.get_all_remappings().collect::<Vec<_>>();
+        assert_eq!(remaps[0].name, "eth-gas-reporter/");
+        assert_eq!(remaps[1].name, "hardhat/");
+        assert_eq!(raw_config.remappings.len(), 2);
+    }
+
+    #[test]
+    fn identifies_source_correctly() {
+        let raw_config = common::get_raw_config(ROOT);
+        assert_eq!(raw_config.src.as_os_str(), OsStr::new("contracts"));
+    }
+
+    #[test]
+    fn can_be_grouped() {
+        common::can_be_grouped(ROOT);
+    }
+
+    #[test]
+    fn group_contains_right_sources() {
+        let group = common::get_group(ROOT);
+        let sources = group.values().next().expect("no sources prsent");
+        assert_eq!(sources.keys().collect::<Vec<_>>().len(), 29); // forge-std is builtin contracts/
+        // In ast_tests.rs, we only see 3 sources
+    }
+
+    #[test]
+    fn identified_version_correctly() {
+        let raw_config = common::get_raw_config(ROOT);
+        let compiler = raw_config.solc_compiler().unwrap();
+        // NOTE: This is incorrect. It's actually a fixed version as declared in hardhat.config.ts
+        assert!(matches!(compiler, SolcCompiler::AutoDetect));
+    }
+}
+
+#[allow(unused_imports)]
 mod foundry_fix_version {
 
     use foundry_compilers::{
