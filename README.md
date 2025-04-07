@@ -1,4 +1,4 @@
-# Foundry Compilers Aletheia
+# Solidity AST Generator
 
 ## Overview
 
@@ -6,7 +6,7 @@ To simplify installation, add the following to `Cargo.toml`
 
 ```toml
 [dependencies]
-foundry-compilers-aletheia = { git = "https://github.com/Cyfrin/foundry-compilers-aletheia", branch = "main", package = "foundry-compilers-aletheia" }
+solidity-ast-rs = { git = "https://github.com/Cyfrin/solidity-ast-rs", branch = "main", package = "solidity-ast" }
 
 ```
 
@@ -14,7 +14,7 @@ Extract ASTs and other Evm Info
 
 ```rust
 use std::path::Path;
-use foundry_compilers_aletheia::{
+use solidity_ast_rs::{
     DerivedAstEvmInfo, ProjectConfigInputBuilder, Result, derive_ast_and_evm_info,
 };
 
