@@ -1131,21 +1131,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "foundry-compilers-aletheia"
-version = "0.0.1"
-dependencies = [
- "foundry-compilers",
- "foundry-config",
- "itertools 0.14.0",
- "pretty_assertions",
- "rayon",
- "semver 1.0.26",
- "serde",
- "serde_json",
- "walkdir",
-]
-
-[[package]]
 name = "foundry-compilers-artifacts"
 version = "0.13.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3096,6 +3081,21 @@ dependencies = [
  "solar-data-structures",
  "solar-interface",
  "tracing",
+]
+
+[[package]]
+name = "solidity-ast"
+version = "0.0.1"
+dependencies = [
+ "foundry-compilers",
+ "foundry-config",
+ "itertools 0.14.0",
+ "pretty_assertions",
+ "rayon",
+ "semver 1.0.26",
+ "serde",
+ "serde_json",
+ "walkdir",
 ]
 
 [[package]]
