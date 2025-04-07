@@ -1,7 +1,7 @@
 mod common {
     use std::path::Path;
 
-    use foundry_compilers_aletheia::{
+    use solidity_ast::{
         DerivedAstEvmInfo, ProjectConfigInputBuilder, Result, derive_ast_and_evm_info,
     };
 

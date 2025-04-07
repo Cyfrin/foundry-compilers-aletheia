@@ -6,7 +6,7 @@ mod common {
 
     use super::{assert_eq, *};
     use foundry_compilers::artifacts::SolcInput;
-    use foundry_compilers_aletheia::{ProjectConfigInputBuilder, Result};
+    use solidity_ast::{ProjectConfigInputBuilder, Result};
 
     pub fn get_compiler_input(root: &str) -> Result<HashMap<semver::Version, SolcInput>> {
         let config_input = ProjectConfigInputBuilder::new(Path::new(root)).build()?;
@@ -121,8 +121,8 @@ mod hardhat_mini {
 
     use std::path::Path;
 
-    use foundry_compilers_aletheia::ProjectConfigInputBuilder;
     use itertools::Itertools;
+    use solidity_ast::ProjectConfigInputBuilder;
 
     use super::{assert_eq, *};
     use crate::common::get_compiler_input;
@@ -133,9 +133,8 @@ mod hardhat_mini {
 
     #[test]
     fn compiler_input() {
-        let builder = ProjectConfigInputBuilder::new(Path::new(ROOT)).with_exclude(
-            foundry_compilers_aletheia::ExcludeConfig::Specific(vec![".t.sol".to_string()]),
-        );
+        let builder = ProjectConfigInputBuilder::new(Path::new(ROOT))
+            .with_exclude(solidity_ast::ExcludeConfig::Specific(vec![".t.sol".to_string()]));
         let config_input = builder.build().unwrap();
         let c = config_input.solc_input_for_ast_generation().unwrap();
         assert_eq!(c.values().len(), 1); // 1 version group
