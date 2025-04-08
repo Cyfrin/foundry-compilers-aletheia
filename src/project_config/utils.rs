@@ -10,6 +10,7 @@ use foundry_compilers::{
     solc::{Solc, SolcCompiler, SolcLanguage},
     utils,
 };
+use itertools::Itertools;
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use semver::Version;
 use std::{
@@ -63,6 +64,9 @@ impl ProjectConfigInput {
             }
 
             SolcCompilerConfigInput::Specific(solc) => {
+                let graph = Graph::<SolData>::resolve_sources(&self.project_paths, sources)?;
+                let (sources, _) = graph.into_sources();
+
                 let versioned_sources = HashMap::from_iter(vec![(
                     solc.version.clone(),
                     create_standard_json_for_ast(sources, &solc.version),
