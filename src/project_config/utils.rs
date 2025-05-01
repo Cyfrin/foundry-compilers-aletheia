@@ -1,16 +1,14 @@
 use super::{ProjectConfigInput, SolcCompilerConfigInput, VersionedAstOutputs};
-use crate::{Result, SolcCompilerOutput, project_config::command::compile_output};
+use crate::{project_config::command::compile_output, Result, SolcCompilerOutput};
 use foundry_compilers::{
-    Graph, ProjectBuilder,
     artifacts::{
-        Settings, SolcInput, Source, Sources, StandardJsonCompilerInput,
-        output_selection::OutputSelection,
+        output_selection::OutputSelection, Settings, SolcInput, Source, Sources,
+        StandardJsonCompilerInput,
     },
     resolver::parse::SolData,
     solc::{Solc, SolcCompiler, SolcLanguage},
-    utils,
+    utils, Graph, ProjectBuilder,
 };
-use itertools::Itertools;
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use semver::Version;
 use std::{
