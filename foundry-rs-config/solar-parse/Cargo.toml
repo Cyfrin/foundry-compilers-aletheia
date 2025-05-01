@@ -13,7 +13,7 @@
 edition = "2021"
 rust-version = "1.83"
 name = "solar-parse"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["DaniPopes <57450786+DaniPopes@users.noreply.github.com>"]
 build = false
 autolib = false
@@ -88,13 +88,16 @@ features = [
 ]
 
 [dependencies.solar-ast]
-version = "0.1.1"
+version = "0.1.2"
+default-features = false
 
 [dependencies.solar-data-structures]
-version = "0.1.1"
+version = "0.1.2"
+default-features = false
 
 [dependencies.solar-interface]
-version = "0.1.1"
+version = "0.1.2"
+default-features = false
 
 [dependencies.tracing]
 version = "0.1"

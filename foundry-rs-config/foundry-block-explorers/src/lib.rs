@@ -24,6 +24,7 @@ use reqwest::{header, IntoUrl, Url};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use std::{
     borrow::Cow,
+    collections::HashMap,
     io::Write,
     path::PathBuf,
     time::{Duration, SystemTime, UNIX_EPOCH},
@@ -44,6 +45,18 @@ pub mod verify;
 
 pub(crate) type Result<T, E = EtherscanError> = std::result::Result<T, E>;
 
+/// The URL for the etherscan V2 API without the chainid param set.
+pub const ETHERSCAN_V2_API_BASE_URL: &str = "https://api.etherscan.io/v2/api";
+
+/// The Etherscan.io API version 1 - classic verifier, one API per chain, 2 - new multichain
+/// verifier
+#[derive(Clone, Default, Debug, PartialEq, Copy)]
+pub enum EtherscanApiVersion {
+    #[default]
+    V1,
+    V2,
+}
+
 /// The Etherscan.io API client.
 #[derive(Clone, Debug)]
 pub struct Client {
@@ -51,6 +64,8 @@ pub struct Client {
     client: reqwest::Client,
     /// Etherscan API key
     api_key: Option<String>,
+    /// Etherscan API version
+    etherscan_api_version: EtherscanApiVersion,
     /// Etherscan API endpoint like <https://api(-chain).etherscan.io/api>
     etherscan_api_url: Url,
     /// Etherscan base endpoint like <https://etherscan.io>
@@ -97,6 +112,16 @@ impl Client {
     /// Create a new client with the correct endpoints based on the chain and provided API key
     pub fn new(chain: Chain, api_key: impl Into<String>) -> Result<Self> {
         Client::builder().with_api_key(api_key).chain(chain)?.build()
+    }
+
+    /// Create a new client with the correct endpoint with the chain and chosen API v2 version
+    pub fn new_v2_from_env(chain: Chain) -> Result<Self> {
+        let api_key = std::env::var("ETHERSCAN_API_KEY")?;
+        Client::builder()
+            .with_api_version(EtherscanApiVersion::V2)
+            .with_api_key(api_key)
+            .chain(chain)?
+            .build()
     }
 
     /// Create a new client with the correct endpoints based on the chain and API key
@@ -153,6 +178,11 @@ impl Client {
     pub fn set_cache(&mut self, root: impl Into<PathBuf>, ttl: Duration) -> &mut Self {
         self.cache = Some(Cache { root: root.into(), ttl });
         self
+    }
+
+    /// Returns the configured etherscan api version.
+    pub fn etherscan_api_version(&self) -> &EtherscanApiVersion {
+        &self.etherscan_api_version
     }
 
     pub fn etherscan_api_url(&self) -> &Url {
@@ -213,10 +243,19 @@ impl Client {
     /// Execute a POST request with a form, without sanity checking the response.
     async fn post<F: Serialize>(&self, form: &F) -> Result<String> {
         trace!(target: "etherscan", "POST {}", self.etherscan_api_url);
+
+        let post_query = match self.chain_id {
+            Some(chain_id) if self.etherscan_api_version == EtherscanApiVersion::V2 => {
+                HashMap::from([("chainid", chain_id)])
+            }
+            _ => HashMap::new(),
+        };
+
         let response = self
             .client
             .post(self.etherscan_api_url.clone())
             .form(form)
+            .query(&post_query)
             .send()
             .await?
             .text()
@@ -279,6 +318,8 @@ pub struct ClientBuilder {
     api_key: Option<String>,
     /// Etherscan API endpoint like <https://api(-chain).etherscan.io/api>
     etherscan_api_url: Option<Url>,
+    /// Etherscan API version (v2 is new verifier version, v1 is the default)
+    etherscan_api_version: EtherscanApiVersion,
     /// Etherscan base endpoint like <https://etherscan.io>
     etherscan_url: Option<Url>,
     /// Path to where ABI files should be cached
@@ -303,14 +344,28 @@ impl ClientBuilder {
         ) -> (reqwest::Result<Url>, reqwest::Result<Url>) {
             (api.into_url(), url.into_url())
         }
-        let (etherscan_api_url, etherscan_url) = chain
+        let (default_etherscan_api_url, etherscan_url) = chain
             .named()
             .ok_or_else(|| EtherscanError::ChainNotSupported(chain))?
             .etherscan_urls()
             .map(urls)
             .ok_or_else(|| EtherscanError::ChainNotSupported(chain))?;
 
-        self.with_chain_id(chain).with_api_url(etherscan_api_url?)?.with_url(etherscan_url?)
+        // V2 etherscan default API urls are different – this handles that case.
+        let etherscan_api_url = if self.etherscan_api_version == EtherscanApiVersion::V2 {
+            Url::parse(ETHERSCAN_V2_API_BASE_URL)
+                .map_err(|_| EtherscanError::Builder("Bad URL Parse".into()))?
+        } else {
+            default_etherscan_api_url?
+        };
+
+        self.with_chain_id(chain).with_api_url(etherscan_api_url)?.with_url(etherscan_url?)
+    }
+
+    /// Configures the etherscan api version
+    pub fn with_api_version(mut self, api_version: EtherscanApiVersion) -> Self {
+        self.etherscan_api_version = api_version;
+        self
     }
 
     /// Configures the etherscan url
@@ -370,14 +425,24 @@ impl ClientBuilder {
     ///   - `etherscan_api_url`
     ///   - `etherscan_url`
     pub fn build(self) -> Result<Client> {
-        let ClientBuilder { client, api_key, etherscan_api_url, etherscan_url, cache, chain_id } =
-            self;
+        let ClientBuilder {
+            client,
+            api_key,
+            etherscan_api_version,
+            etherscan_api_url,
+            etherscan_url,
+            cache,
+            chain_id,
+        } = self;
 
         let client = Client {
             client: client.unwrap_or_default(),
             api_key,
             etherscan_api_url: etherscan_api_url
+                .clone()
                 .ok_or_else(|| EtherscanError::Builder("etherscan api url".to_string()))?,
+            // Set default API version to V1 if missing
+            etherscan_api_version,
             etherscan_url: etherscan_url
                 .ok_or_else(|| EtherscanError::Builder("etherscan url".to_string()))?,
             cache,

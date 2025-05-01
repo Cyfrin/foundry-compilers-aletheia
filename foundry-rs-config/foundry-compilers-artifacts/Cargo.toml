@@ -13,7 +13,7 @@
 edition = "2021"
 rust-version = "1.83"
 name = "foundry-compilers-artifacts"
-version = "0.13.5"
+version = "0.14.1"
 authors = ["Foundry Maintainers"]
 build = false
 exclude = [
@@ -43,16 +43,17 @@ name = "foundry_compilers_artifacts"
 path = "src/lib.rs"
 
 [dependencies.foundry-compilers-artifacts-solc]
-version = "0.13.5"
+version = "0.14.1"
 
 [dependencies.foundry-compilers-artifacts-vyper]
-version = "0.13.5"
+version = "0.14.1"
 
 [lints.clippy]
 dbg-macro = "warn"
-literal-string-with-formatting-args = "allow"
+large-enum-variant = "allow"
 manual-string-new = "warn"
 redundant-clone = "warn"
+result-large-err = "allow"
 uninlined-format-args = "warn"
 use-self = "warn"
 
