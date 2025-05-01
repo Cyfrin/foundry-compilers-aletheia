@@ -5,16 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.1](https://github.com/paradigmxyz/solar/releases/tag/v0.1.1)
+## [0.1.2](https://github.com/paradigmxyz/solar/releases/tag/v0.1.2)
 
-### Documentation
+### Features
 
-- Add icons ([#109](https://github.com/paradigmxyz/solar/issues/109))
+- Implement minimal HIR visitor ([#195](https://github.com/paradigmxyz/solar/issues/195))
 
 ### Miscellaneous Tasks
 
-- Release 0.1.1 ([#182](https://github.com/paradigmxyz/solar/issues/182))
-- [macros] Fix expansion spans ([#175](https://github.com/paradigmxyz/solar/issues/175))
+- Release 0.1.2 ([#251](https://github.com/paradigmxyz/solar/issues/251))
+
+## [0.1.2](https://github.com/paradigmxyz/solar/releases/tag/v0.1.2)
+
+### Features
+
+- Implement minimal HIR visitor ([#195](https://github.com/paradigmxyz/solar/issues/195))
 
 ## [0.1.1](https://github.com/paradigmxyz/solar/releases/tag/v0.1.1)
 

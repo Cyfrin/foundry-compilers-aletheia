@@ -13,7 +13,7 @@
 edition = "2021"
 rust-version = "1.83"
 name = "foundry-config"
-version = "1.0.0"
+version = "1.1.0"
 authors = ["Foundry Contributors"]
 build = false
 autolib = false
@@ -35,11 +35,10 @@ name = "foundry_config"
 path = "src/lib.rs"
 
 [dependencies]
-Inflector = "0.11"
 glob = "0.3"
 globset = "0.4"
+heck = "0.5"
 number_prefix = "0.4"
-serde_regex = "1"
 toml_edit = "0.22"
 
 [dependencies.alloy-chains]
@@ -73,12 +72,12 @@ features = [
 ]
 
 [dependencies.foundry-block-explorers]
-version = "0.11.0"
+version = "0.13.0"
 features = ["foundry-compilers"]
 default-features = false
 
 [dependencies.foundry-compilers]
-version = "0.13.5"
+version = "0.14.0"
 features = ["svm-solc"]
 default-features = false
 
@@ -117,8 +116,12 @@ version = "1.0"
 features = ["arbitrary_precision"]
 
 [dependencies.solar-parse]
-version = "=0.1.1"
+version = "=0.1.2"
 default-features = false
+
+[dependencies.soldeer-core]
+version = "=0.5.4"
+features = ["serde"]
 
 [dependencies.thiserror]
 version = "2"

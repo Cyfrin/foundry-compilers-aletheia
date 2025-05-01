@@ -13,7 +13,7 @@
 edition = "2021"
 rust-version = "1.70"
 name = "foundry-block-explorers"
-version = "0.11.0"
+version = "0.13.1"
 authors = ["Foundry Maintainers"]
 build = false
 exclude = [
@@ -21,6 +21,7 @@ exclude = [
     "scripts/",
     "test-data/",
 ]
+autolib = false
 autobins = false
 autoexamples = false
 autotests = false
@@ -47,6 +48,13 @@ rustdoc-args = [
 
 [package.metadata.playground]
 all-features = true
+
+[features]
+compilers-full = ["foundry-compilers?/full"]
+default = ["rustls"]
+foundry-compilers = ["dep:foundry-compilers"]
+openssl = ["reqwest/native-tls"]
+rustls = ["reqwest/rustls-tls"]
 
 [lib]
 name = "foundry_block_explorers"
@@ -78,7 +86,7 @@ features = [
 default-features = false
 
 [dependencies.foundry-compilers]
-version = "0.13"
+version = "0.14"
 optional = true
 
 [dependencies.reqwest]
@@ -128,10 +136,3 @@ features = [
     "env-filter",
     "fmt",
 ]
-
-[features]
-compilers-full = ["foundry-compilers?/full"]
-default = ["rustls"]
-foundry-compilers = ["dep:foundry-compilers"]
-openssl = ["reqwest/native-tls"]
-rustls = ["reqwest/rustls-tls"]

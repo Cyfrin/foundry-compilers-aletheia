@@ -13,7 +13,7 @@
 edition = "2021"
 rust-version = "1.83"
 name = "solar-data-structures"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["DaniPopes <57450786+DaniPopes@users.noreply.github.com>"]
 build = false
 autolib = false

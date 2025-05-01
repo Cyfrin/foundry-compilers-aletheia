@@ -13,7 +13,7 @@
 edition = "2021"
 rust-version = "1.83"
 name = "foundry-compilers"
-version = "0.13.5"
+version = "0.14.1"
 authors = ["Foundry Maintainers"]
 build = false
 exclude = [
@@ -109,7 +109,7 @@ version = "6.0"
 version = "1"
 
 [dependencies.foundry-compilers-artifacts]
-version = "0.13.5"
+version = "0.14.1"
 features = [
     "checksum",
     "walkdir",
@@ -117,8 +117,11 @@ features = [
 ]
 
 [dependencies.foundry-compilers-core]
-version = "0.13.5"
-features = ["regex"]
+version = "0.14.1"
+features = [
+    "hasher",
+    "regex",
+]
 
 [dependencies.fs_extra]
 version = "1.3"
@@ -133,9 +136,6 @@ version = "0.5"
 
 [dependencies.itertools]
 version = ">=0.13, <=0.14"
-
-[dependencies.md-5]
-version = "0.10"
 
 [dependencies.path-slash]
 version = "0.2"
@@ -167,7 +167,11 @@ optional = true
 default-features = false
 
 [dependencies.solar-parse]
-version = "=0.1.1"
+version = "=0.1.2"
+default-features = false
+
+[dependencies.solar-sema]
+version = "=0.1.2"
 default-features = false
 
 [dependencies.svm]
@@ -207,7 +211,7 @@ version = "1.0"
 version = "4.0.0"
 
 [dev-dependencies.foundry-compilers-core]
-version = "0.13.5"
+version = "0.14.1"
 features = ["test-utils"]
 
 [dev-dependencies.reqwest]
@@ -239,9 +243,10 @@ default-features = false
 
 [lints.clippy]
 dbg-macro = "warn"
-literal-string-with-formatting-args = "allow"
+large-enum-variant = "allow"
 manual-string-new = "warn"
 redundant-clone = "warn"
+result-large-err = "allow"
 uninlined-format-args = "warn"
 use-self = "warn"
 

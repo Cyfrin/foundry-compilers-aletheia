@@ -13,7 +13,7 @@
 edition = "2021"
 rust-version = "1.83"
 name = "solar-config"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["DaniPopes <57450786+DaniPopes@users.noreply.github.com>"]
 build = "build.rs"
 autolib = false
@@ -40,12 +40,19 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/paradigmxyz/solar"
 
 [features]
+asm = []
 clap = [
     "version",
     "dep:clap",
 ]
+jemalloc = []
 nightly = []
 serde = ["dep:serde"]
+tracing = []
+tracing-chrome = []
+tracing-off = []
+tracy = []
+tracy-allocator = []
 version = ["dep:vergen"]
 
 [lib]
@@ -62,7 +69,7 @@ version = "1.0"
 optional = true
 
 [dependencies.strum]
-version = "0.26"
+version = "0.27"
 features = ["derive"]
 
 [dev-dependencies.serde_json]

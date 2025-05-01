@@ -13,7 +13,7 @@
 edition = "2021"
 rust-version = "1.83"
 name = "foundry-compilers-core"
-version = "0.13.5"
+version = "0.14.1"
 authors = ["Foundry Maintainers"]
 build = false
 exclude = [
@@ -34,6 +34,7 @@ repository = "https://github.com/foundry-rs/compilers"
 
 [features]
 async = ["dep:tokio"]
+hasher = ["dep:xxhash-rust"]
 project-util = [
     "dep:tempfile",
     "dep:fs_extra",
@@ -107,6 +108,12 @@ optional = true
 version = "2.5"
 optional = true
 
+[dependencies.xxhash-rust]
+version = "0.8"
+features = ["xxh3"]
+optional = true
+default-features = false
+
 [dev-dependencies.tempfile]
 version = "3.9"
 
@@ -115,9 +122,10 @@ version = "0.2"
 
 [lints.clippy]
 dbg-macro = "warn"
-literal-string-with-formatting-args = "allow"
+large-enum-variant = "allow"
 manual-string-new = "warn"
 redundant-clone = "warn"
+result-large-err = "allow"
 uninlined-format-args = "warn"
 use-self = "warn"
 
